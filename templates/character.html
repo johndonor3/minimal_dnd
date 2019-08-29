@@ -10,10 +10,11 @@
 <script type="text/javascript">
 
 function updateHP(delta, name){
+
     const form = document.createElement('form');
     form.method = "post";
     form.action = "/character/".concat(name, ".html");
-    console.log(form.action)
+
 
     const hiddenField = document.createElement('input');
     hiddenField.type = 'hidden';
@@ -27,6 +28,7 @@ function updateHP(delta, name){
 
 function handleClick(evt) {
   var node = evt.target;
+
   if (node.value == 'hp_p') {
     updateHP(1, node.name);
   }
@@ -38,7 +40,7 @@ function handleClick(evt) {
 </script>
 
 <div class="row">
-    <div align=center><h1>Character info for {{char.name}}</h1></div>
+    <div align=center>IDK character info? up here??</div>
     <div align=center>
         <div class="col-md-3">
             <div class="well">
@@ -56,7 +58,8 @@ function handleClick(evt) {
             </div>
         </div> 
         <div class="col-md-5">
-        <table class="table" onclick="handleClick(event);">
+        <h1>Character info for {{char.name}} </h1>
+        <table class="table" onclick="handleClick(event);" style="font-size:150%;">
             <col width="50">
             <col width="50">
             <col width="20">
@@ -66,7 +69,10 @@ function handleClick(evt) {
             <td align="center"><b>AC</b></th>
             <td align="center"><b>HP</b></th>
             <td align="center">
-                <button type="button" name={{char["name"]}} value="hp_p">+</button>
+                <button type="button" name="{{char["name"]}}" value="hp_p"
+                        style="background-color:#d6d6d6;
+                            color:#191919;
+                            font-size:18px;">+</button>
             </th>
             <td align="center"><b>Initiative</b></th>
             <td align="center"><b>Speed</b></th>
@@ -75,7 +81,10 @@ function handleClick(evt) {
             <td align="center"><b>{{char["ac"]}}</b></td>
             <td align="center"><b>{{char["hp"]}}</b></td>
                 <td align="center">
-                <button type="button" name={{char["name"]}} value="hp_m">-</button>
+                <button type="button" name="{{char["name"]}}" value="hp_m"
+                        style="background-color:#d6d6d6;
+                            color:#191919;
+                            font-size:18px;">-</button>
             </th>
             <td align="center"><b>{{char["iniative"]}}</b></td>
             <td align="center"><b>{{char["speed"]}}</b></td>
