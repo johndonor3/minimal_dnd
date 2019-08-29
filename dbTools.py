@@ -61,7 +61,26 @@ async def getSkills(cid):
     return await cur.fetchone()
 
 
-async def addCharacter(name, base, abilities, skills):
+async def getPurse(cid):
+    db = await get_db()
+    cur = await db.execute(
+    """SELECT cp, sp, ep, gp, pp
+          FROM purse
+      WHERE character_id == '{}' """.format(cid),
+    )
+    return await cur.fetchone()
+
+
+async def getNotes(cid):
+    db = await get_db()
+    cur = await db.execute(
+    """SELECT *
+          FROM notes
+      WHERE character_id == '{}' """.format(cid),
+    )
+    return await cur.fetchall()
+
+async def addCharacter(name="moron", base={}, abilities={}, skills={}, purse={}):
     loaded = await getCharacters()
     names = [l["name"] for l in loaded]
     db = await get_db()
@@ -123,6 +142,30 @@ async def addCharacter(name, base, abilities, skills):
     )
     await db.commit()
 
+    character_id = newChar["id"]
+    cp = purse.get("cp", 0)
+    sp = purse.get("sp", 0)
+    ep = purse.get("ep", 0)
+    gp = purse.get("gp", 0)
+    pp = purse.get("pp", 0)
+    cp, sp, ep, gp, pp 
+    await db.execute(
+         """INSERT INTO purse (character_id, cp, sp, ep, gp, pp) 
+                VALUES (?, ?, ?, ?, ?, ?)""",
+         [character_id, cp, sp, ep, gp, pp],
+    )
+    await db.commit()
+
+
+async def addNote(cid, title, body):
+    db = await get_db()
+    
+    await db.execute(
+         """INSERT INTO notes (character_id, title, body) 
+                VALUES (?, ?, ?)""",
+         [cid, title, body],
+    )
+    await db.commit()
 
 async def updateCharacter(name, attr, value):
     assert len(attr) == len(value), "mis-matched update!"

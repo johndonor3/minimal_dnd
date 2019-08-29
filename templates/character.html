@@ -56,6 +56,19 @@ function handleClick(evt) {
                 {% endfor %}
                 </table>
             </div>
+            <div class="well">
+                <h4>Purse</h4>
+                <table class="table">
+                <col width="80">
+                <col width="80">
+                {% for key in purse.keys() %}
+                <tr>
+                <td align="center"><b>{{key}}</b></td>
+                <td align="left"><b>{{purse[key]}}</b></td>
+                </tr>
+                {% endfor %}
+                </table>
+            </div>
         </div> 
         <div class="col-md-5">
         <h1>Character info for {{char.name}} </h1>
@@ -90,6 +103,17 @@ function handleClick(evt) {
             <td align="center"><b>{{char["speed"]}}</b></td>
             </tr>
         </table>
+        <div class="well" style="height:200px;overflow:auto;"> 
+            {% for title in notes.keys() %}
+            <h4>{{title}}</h4>
+            <p>{{notes[title]}} </p>
+            {% endfor %}
+        </div>
+        <form action="{{ '/character/%s.html'%char["name"] }}" method="post" class="create-post">
+        <p>Note Title:<input type="text" size="30" name="title" style="color:#191919;"></p>
+        <p>Text:<textarea name="text" rows="5" cols="40" style="color:#191919;"></textarea></p>
+        <p><input type="submit" value="Post" style="color:#191919;"></p>
+        </form>
         </div>
         <div class="col-md-2">
             <div class="well">

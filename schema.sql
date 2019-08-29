@@ -41,3 +41,24 @@ CREATE TABLE skills (
    stealth INT NOT NULL,
    survival INT NOT NULL
 );
+
+DROP TABLE IF EXISTS purse;
+CREATE TABLE purse (
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   character_id INT NOT NULL,
+   cp INT NOT NULL,
+   sp INT NOT NULL,
+   ep INT NOT NULL,
+   gp INT NOT NULL,
+   pp INT NOT NULL
+);
+
+
+DROP TABLE IF EXISTS notes;
+CREATE TABLE notes (
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   character_id INT NOT NULL,
+   title TEXT NOT NULL,
+   body TEXT NOT NULL
+);
+
