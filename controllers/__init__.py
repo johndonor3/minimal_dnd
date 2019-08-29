@@ -1,6 +1,6 @@
 #!/usr/bin/python
-# import asyncio
 
+import aiosqlite
 
 def getTemplateDictBase():
     version = "current"
