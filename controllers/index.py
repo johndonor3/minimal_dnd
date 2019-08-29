@@ -14,23 +14,22 @@ index_page = Blueprint("index_page", __name__)
 async def index():
     """ Index page. """
 
-    form = await request.form
-    
-    if "character" in form:
-        base = {"iniative": 5,
-                "speed": 25,
-                "ac": 11,
-                "proficiency": 3,
-                "hp": 15}
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'char' in request.files:
+            file = request.files['file']
+            fullName = os.path.join("/var/www/dnd/", file.filename)
+            try:
+                await file.save(fullName)
+                loadNew = True
+            except:
+                flash("there was a problem with your file!")
+        else:
+            flash('No file part')
 
-        abilities = {"strength": 11,
-                     "dexterity": 11,
-                     "constitution": 11,
-                     "intelligence": 11,
-                     "wisdom": 11,
-                     "charisma": 11}
-        name = form["character"]
-        await db.addCharacter(name, base, abilities)
+    if loadNew:
+        char = yaml.load(open(str(fullName)))
+        await db.addCharacter(char["name"], char["base"], char["abilities"])
         # await db.addCharacter(name, hp=10)
 
     characters = await db.getCharacters()
