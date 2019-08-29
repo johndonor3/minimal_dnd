@@ -91,8 +91,18 @@ function handleClick(evt) {
             </tr>
         </table>
         </div>
-        <div class="col-md-3">
-        </div>
+        <div class="col-md-2">
+            <div class="well">
+                <table class="table">
+                {% for key in skills.keys() %}
+                <tr>
+                <td align="right"><b>{{key.replace("_", " ")}}</b></td>
+                <td align="center"><b>{{skills[key]}}</b></td>
+                </tr>
+                {% endfor %}
+                </table>
+            </div>
+        </div> 
     </div>
 </div>
 

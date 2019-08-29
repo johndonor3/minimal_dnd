@@ -4,7 +4,7 @@
 {% block head %}
   <meta name="robots" content="noindex" />
   <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-  <title>start</title>
+  <title>DND</title>
   <meta http-equiv="refresh" CONTENT="600"/>
 
   {#  ${header("Plan Observing")} #}
@@ -16,14 +16,15 @@
     <div class=row>
         <div align=center><h1>Current characters</h1></div>
         {% for c in characters %}
-        <a href="{{ '/character/%s.html'%c.name }}">{{c.name}}</a>
+        <a href="{{ '/character/%s.html'%c.name }}">{{c.name}} <br></a>
         {% endfor %}
     </div>
     
 </div>
 
 
-<h1>Upload new File</h1>
+<h2>Upload a new character, or overwrite an existing one</h2>
+<h4>Expects formatted yaml file </h4>
 <form method=post enctype=multipart/form-data>
   <input type=file name=char>
   <input type=submit value=Upload>

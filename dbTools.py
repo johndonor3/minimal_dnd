@@ -49,13 +49,30 @@ async def getAbilty(cid):
     return await cur.fetchone()
 
 
-async def addCharacter(name, base, abilities):
+async def getSkills(cid):
+    db = await get_db()
+    cur = await db.execute(
+    """SELECT animal_handling, arcana, athletics, deception, history,
+              insight, intimidation, investigation, medicine, nature,
+              perception, performance, sleight_of_hand, stealth, survival
+          FROM skills
+      WHERE character_id == '{}' """.format(cid),
+    )
+    return await cur.fetchone()
+
+
+async def addCharacter(name, base, abilities, skills):
+    loaded = await getCharacters()
+    names = [l["name"] for l in loaded]
+    db = await get_db()
+    if name in names:
+        await db.execute("DELETE FROM characters WHERE name == '{}'".format(name))
     iniative = base.get("iniative", 0)
     speed = base.get("speed", 30)
     proficiency = base.get("proficiency", 2)
     hp = base.get("hp", 10)
     ac = base.get("ac", 10)
-    db = await get_db()
+    
     await db.execute(
          """INSERT INTO characters (name, hp, ac, iniative, speed, proficiency) 
                 VALUES (?, ?, ?, ?, ?, ?)""",
@@ -79,7 +96,32 @@ async def addCharacter(name, base, abilities):
     )
     await db.commit()
 
+    animal_handling = skills.get("animal_handling", -1)
+    arcana = skills.get("arcana", -1)
+    athletics = skills.get("athletics", -1)
+    deception = skills.get("deception", -1)
+    history = skills.get("history", -1)
+    insight = skills.get("insight", -1)
+    intimidation = skills.get("intimidation", -1)
+    investigation = skills.get("investigation", -1)
+    medicine = skills.get("medicine", -1)
+    nature = skills.get("nature", -1)
+    perception = skills.get("perception", -1)
+    performance = skills.get("performance", -1)
+    sleight_of_hand = skills.get("sleight_of_hand", -1)
+    stealth = skills.get("stealth", -1)
+    survival = skills.get("survival", -1)
     
+    await db.execute(
+         """INSERT INTO skills (character_id, animal_handling, arcana, athletics, deception, history,
+                            insight, intimidation, investigation, medicine, nature,
+                            perception, performance, sleight_of_hand, stealth, survival) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+         [character_id, animal_handling, arcana, athletics, deception, history,
+          insight, intimidation, investigation, medicine, nature,
+          perception, performance, sleight_of_hand, stealth, survival],
+    )
+    await db.commit()
 
 
 async def updateCharacter(name, attr, value):

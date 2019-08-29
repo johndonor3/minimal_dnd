@@ -1,12 +1,15 @@
 #!/usr/bin/python
 
-from quart import render_template, Blueprint, g, request
+import os
+import yaml
+from quart import render_template, Blueprint, g, request, flash
 
 from . import getTemplateDictBase
-
 import dbTools as db
-# from rules.creature import creature
 
+
+async def loadFile(path):
+    return yaml.load(open(str(path)))
 
 index_page = Blueprint("index_page", __name__)
 
@@ -14,22 +17,25 @@ index_page = Blueprint("index_page", __name__)
 async def index():
     """ Index page. """
 
+    loadNew = False
     if request.method == 'POST':
         # check if the post request has the file part
-        if 'char' in request.files:
-            file = request.files['file']
+        files = await request.files
+        if 'char' in files:
+            file = files['char']
             fullName = os.path.join("/var/www/dnd/", file.filename)
             try:
-                await file.save(fullName)
+                file.save(fullName)
                 loadNew = True
             except:
-                flash("there was a problem with your file!")
+                await flash("there was a problem with your file!")
         else:
-            flash('No file part')
+            await flash('No file part')
 
     if loadNew:
-        char = yaml.load(open(str(fullName)))
-        await db.addCharacter(char["name"], char["base"], char["abilities"])
+        char = await loadFile(fullName)
+        # await db.addCharacter(char["name"], char["base"], char["abilities"])
+        await db.addCharacter(**char)
         # await db.addCharacter(name, hp=10)
 
     characters = await db.getCharacters()

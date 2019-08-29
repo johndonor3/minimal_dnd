@@ -20,3 +20,24 @@ CREATE TABLE abilities (
    wisdom INT NOT NULL,
    charisma INT NOT NULL
 );
+
+DROP TABLE IF EXISTS skills;
+CREATE TABLE skills (
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   character_id INT NOT NULL,
+   animal_handling INT NOT NULL,
+   arcana INT NOT NULL,
+   athletics INT NOT NULL,
+   deception INT NOT NULL,
+   history INT NOT NULL,
+   insight INT NOT NULL,
+   intimidation INT NOT NULL,
+   investigation INT NOT NULL,
+   medicine INT NOT NULL,
+   nature INT NOT NULL,
+   perception INT NOT NULL,
+   performance INT NOT NULL,
+   sleight_of_hand INT NOT NULL,
+   stealth INT NOT NULL,
+   survival INT NOT NULL
+);

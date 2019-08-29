@@ -41,11 +41,14 @@ async def character(name):
     abils = await db.getAbilty(char["id"])
     abils = {k: abils[k] for k in abils.keys()}
     mods = {k: toModifier(abils[k]) for k in abils.keys()}
+    skills = await db.getSkills(char["id"])
+    skills = {k: skills[k] for k in skills.keys()}
 
     template_dict = getTemplateDictBase()
     template_dict.update({"char": char, 
                           "abils": abils,
-                          "mods": mods})
+                          "mods": mods,
+                          "skills": skills})
     return await render_template("character.html", **template_dict)
 
 

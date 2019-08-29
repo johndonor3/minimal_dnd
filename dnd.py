@@ -7,6 +7,7 @@ from sqlite3 import dbapi2 as sqlite3
 from quart import Quart, render_template
 
 app = Quart(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 app.config.update({
    'DATABASE': app.root_path / 'char.db',
