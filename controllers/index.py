@@ -17,8 +17,9 @@ async def index():
     form = await request.form
     
     if "character" in form:
-        base = {"iniative": -1,
+        base = {"iniative": 5,
                 "speed": 25,
+                "ac": 11,
                 "proficiency": 3,
                 "hp": 15}
 

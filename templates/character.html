@@ -38,42 +38,51 @@ function handleClick(evt) {
 </script>
 
 <div class="row">
-        <div align=center><h1>Character info for {{name}}</h1></div>
-    <div class="row">
-        <div align=center>
-        <div class="well">
-        <!--     <div class="col-md-2">
-            </div> 
-            <div class="col-md-5"> -->
-            <table class="table" onclick="handleClick(event);">
-                <col width="50">
-                <col width="50">
-                <col width="20">
-                <col width="100">
-                <col width="80">
+    <div align=center><h1>Character info for {{char.name}}</h1></div>
+    <div align=center>
+        <div class="col-md-3">
+            <div class="well">
+                <table class="table">
+                <tr> <th> </th> <th align="center"> score </th> 
+                    <th align="center"> modifier </th> </tr>
+                {% for key in abils.keys() %}
                 <tr>
-                <td align="center"><b>AC</b></th>
-                <td align="center"><b>HP</b></th>
+                <td align="right"><b>{{key}}</b></td>
+                <td align="center"><b>{{abils[key]}}</b></td>
+                <td align="center"><b>{{mods[key]}}</b></td>
+                </tr>
+                {% endfor %}
+                </table>
+            </div>
+        </div> 
+        <div class="col-md-5">
+        <table class="table" onclick="handleClick(event);">
+            <col width="50">
+            <col width="50">
+            <col width="20">
+            <col width="100">
+            <col width="80">
+            <tr>
+            <td align="center"><b>AC</b></th>
+            <td align="center"><b>HP</b></th>
+            <td align="center">
+                <button type="button" name={{char["name"]}} value="hp_p">+</button>
+            </th>
+            <td align="center"><b>Initiative</b></th>
+            <td align="center"><b>Speed</b></th>
+            </tr>
+            <tr>
+            <td align="center"><b>{{char["ac"]}}</b></td>
+            <td align="center"><b>{{char["hp"]}}</b></td>
                 <td align="center">
-                    <button type="button" name={{name}} value="hp_p">+</button>
-                </th>
-                <td align="center"><b>Initiative</b></th>
-                <td align="center"><b>Speed</b></th>
-                </tr>
-                <tr>
-                <td align="center"><b>{{ac}}</b></th>
-                <td align="center"><b>{{hp}}</b></th>
-                    <td align="center">
-                    <button type="button" name={{name}} value="hp_m">-</button>
-                </th>
-                <td align="center"><b>{{initiative}}</b></th>
-                <td align="center"><b>{{speed}}</b></th>
-                </tr>
-            </table>
-            <!-- </div>
-            <div class="col-md-3">
-            </div> -->
+                <button type="button" name={{char["name"]}} value="hp_m">-</button>
+            </th>
+            <td align="center"><b>{{char["iniative"]}}</b></td>
+            <td align="center"><b>{{char["speed"]}}</b></td>
+            </tr>
+        </table>
         </div>
+        <div class="col-md-3">
         </div>
     </div>
 </div>

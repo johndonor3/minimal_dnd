@@ -3,6 +3,7 @@ CREATE TABLE characters (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    name TEXT NOT NULL,
    hp INT NOT NULL,
+   ac INT NOT NULL,
    iniative INT NOT NULL,
    speed INT NOT NULL,
    proficiency INT NOT NULL

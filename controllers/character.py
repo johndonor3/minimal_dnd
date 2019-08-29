@@ -1,10 +1,19 @@
 #!/usr/bin/env/python 
 
-from quart import render_template, Blueprint, request, g
+from quart import render_template, Blueprint, request
 
 from . import getTemplateDictBase
 import dbTools as db
 # from rules.creature import creature
+
+def toModifier(score):
+    m = int((score-10)/2)
+    if m < 0:
+        return str(m)
+    elif m > 0:
+        return "+" + str(m)
+    else:
+        return "0"
 
 
 character_page = Blueprint("character", __name__)
@@ -18,7 +27,7 @@ async def character(name):
     dbChar = await db.getCharacter(name)
 
     char = {k: dbChar[k] for k in dbChar.keys()}
-
+    
     if "hp" in form:
         curr = char["hp"]
         delta = int(form["hp"])
@@ -29,12 +38,14 @@ async def character(name):
         dbChar = await db.getCharacter(name)
         char = {k: dbChar[k] for k in dbChar.keys()}
 
-    char["ac"] = 10
-    char["initiative"] = -1
-    char["speed"] = 30
+    abils = await db.getAbilty(char["id"])
+    abils = {k: abils[k] for k in abils.keys()}
+    mods = {k: toModifier(abils[k]) for k in abils.keys()}
 
     template_dict = getTemplateDictBase()
-    template_dict.update(char)
+    template_dict.update({"char": char, 
+                          "abils": abils,
+                          "mods": mods})
     return await render_template("character.html", **template_dict)
 
 

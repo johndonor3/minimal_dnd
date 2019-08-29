@@ -26,7 +26,6 @@ async def getCharacters():
           FROM characters
       ORDER BY id DESC""",
     )
-    # posts = cur.fetchall()
     return await cur.fetchall()
 
 
@@ -37,7 +36,16 @@ async def getCharacter(name):
           FROM characters
       WHERE name == '{}' """.format(name),
     )
-    # posts = cur.fetchall()
+    return await cur.fetchone()
+
+
+async def getAbilty(cid):
+    db = await get_db()
+    cur = await db.execute(
+    """SELECT strength, dexterity, constitution, intelligence, wisdom, charisma
+          FROM abilities
+      WHERE character_id == '{}' """.format(cid),
+    )
     return await cur.fetchone()
 
 
@@ -46,11 +54,12 @@ async def addCharacter(name, base, abilities):
     speed = base.get("speed", 30)
     proficiency = base.get("proficiency", 2)
     hp = base.get("hp", 10)
+    ac = base.get("ac", 10)
     db = await get_db()
     await db.execute(
-         """INSERT INTO characters (name, hp, iniative, speed, proficiency) 
-                VALUES (?, ?, ?, ?, ?)""",
-         [name, hp, iniative, speed, proficiency],
+         """INSERT INTO characters (name, hp, ac, iniative, speed, proficiency) 
+                VALUES (?, ?, ?, ?, ?, ?)""",
+         [name, hp, ac, iniative, speed, proficiency],
     )
     await db.commit()
 
@@ -68,6 +77,7 @@ async def addCharacter(name, base, abilities):
                 VALUES (?, ?, ?, ?, ?, ?, ?)""",
          [character_id, strength, dexterity, constitution, intelligence, wisdom, charisma],
     )
+    await db.commit()
 
     
 
