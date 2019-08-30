@@ -1,10 +1,13 @@
 #!/usr/bin/env/python 
 
-from quart import render_template, Blueprint, request
+import re
+
+from quart import render_template, Blueprint, request, flash
 
 from . import getTemplateDictBase
 import dbTools as db
 # from rules.creature import creature
+
 
 def toModifier(score):
     m = int((score-10)/2)
@@ -14,6 +17,25 @@ def toModifier(score):
         return "+" + str(m)
     else:
         return "0"
+
+
+def isDamage(s):
+    return re.match("\dd\d{1,2}\s*\+?\s*\d*", s)
+
+
+async def addItem(cid, form):
+    weapon = isDamage(form["damage"]) is not None
+    if weapon:
+        damage = form["damage"]
+    else:
+        damage = None
+    try:
+        weight = float(form["weight"])
+        count = int(form["count"])
+    except:
+        await flash("there was a problem with your item!")
+    await db.addItem(cid, form["item"], weight, form["description"],
+                     weapon=weapon, damage=damage, count=count)
 
 
 character_page = Blueprint("character", __name__)
@@ -31,6 +53,9 @@ async def character(name):
     if "title" in form:
         await db.addNote(char["id"], form["title"], form["text"])
     
+    if "item" in form:
+        await addItem(char["id"], form)
+
     if "hp" in form:
         curr = char["hp"]
         delta = int(form["hp"])
@@ -52,13 +77,23 @@ async def character(name):
     notes = await db.getNotes(char["id"])
     notes = {n["title"]: n["body"] for n in notes}
 
+    items = await db.getItems(char["id"])
+    weapons = [i for i in items if i["weapon"]]
+
+    gear_lbs = sum([i["weight"] for i in items])
+
+    char["gear_lbs"] = gear_lbs
+    char["atk_mod"] = int(mods["strength"]) + int(char["proficiency"])
+
     template_dict = getTemplateDictBase()
     template_dict.update({"char": char, 
                           "abils": abils,
                           "mods": mods,
                           "skills": skills,
                           "purse": purse,
-                          "notes": notes})
+                          "notes": notes,
+                          "items": items,
+                          "weapons": weapons})
     return await render_template("character.html", **template_dict)
 
 

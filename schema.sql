@@ -62,3 +62,15 @@ CREATE TABLE notes (
    body TEXT NOT NULL
 );
 
+DROP TABLE IF EXISTS items;
+CREATE TABLE items (
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   character_id INT NOT NULL,
+   item TEXT NOT NULL,
+   weight REAL NOT NULL,
+   description TEXT,
+   weapon BOOLEAN NOT NULL,
+   damage TEXT,
+   count INT NOT NULL
+);
+

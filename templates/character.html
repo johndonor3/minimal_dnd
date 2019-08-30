@@ -56,28 +56,46 @@ function handleClick(evt) {
                 {% endfor %}
                 </table>
             </div>
-            <div class="well">
-                <h4>Purse</h4>
+            <div class="col-md-5">
+                <div class="well" style="height:280px;">
+                    <h4>Purse</h4>
+                    <table class="table">
+                    <col width="80">
+                    <col width="80">
+                    {% for key in purse.keys() %}
+                    <tr>
+                    <td align="center"><b>{{key}}</b></td>
+                    <td align="left"><b>{{purse[key]}}</b></td>
+                    </tr>
+                    {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="well" style="height:280px;overflow:auto;">
                 <table class="table">
-                <col width="80">
-                <col width="80">
-                {% for key in purse.keys() %}
-                <tr>
-                <td align="center"><b>{{key}}</b></td>
-                <td align="left"><b>{{purse[key]}}</b></td>
-                </tr>
-                {% endfor %}
+                    <th>items</th><th>cnt</th><th>weight</th>
+                    {% for i in items %}
+                    <tr>
+                    <td align="center"><b>{{i.item}}</b></td>
+                    <td align="left"><b>{{i.count}}</b></td>
+                    <td align="left"><b>{{i.weight}}</b></td>
+                    </tr>
+                    {% endfor %}
                 </table>
+                </div>
             </div>
         </div> 
         <div class="col-md-5">
         <h1>Character info for {{char.name}} </h1>
         <table class="table" onclick="handleClick(event);" style="font-size:150%;">
-            <col width="50">
-            <col width="50">
+            <col width="40">
+            <col width="40">
             <col width="20">
+            <col width="60">
+            <col width="60">
+            <col width="60">
             <col width="100">
-            <col width="80">
             <tr>
             <td align="center"><b>AC</b></th>
             <td align="center"><b>HP</b></th>
@@ -89,6 +107,8 @@ function handleClick(evt) {
             </th>
             <td align="center"><b>Initiative</b></th>
             <td align="center"><b>Speed</b></th>
+            <td align="center"><b>Proficiency</b></th>
+            <td align="center"><b>cap.</b> {{abils["strength"]*15}} lbs</th>
             </tr>
             <tr>
             <td align="center"><b>{{char["ac"]}}</b></td>
@@ -101,6 +121,8 @@ function handleClick(evt) {
             </th>
             <td align="center"><b>{{char["iniative"]}}</b></td>
             <td align="center"><b>{{char["speed"]}}</b></td>
+            <td align="center"><b>{{char["proficiency"]}}</b></td>
+            <td align="center"><b>gear</b> {{char["gear_lbs"]}} lbs</td>
             </tr>
         </table>
         <div class="well" style="height:200px;overflow:auto;"> 
@@ -109,11 +131,41 @@ function handleClick(evt) {
             <p>{{notes[title]}} </p>
             {% endfor %}
         </div>
-        <form action="{{ '/character/%s.html'%char["name"] }}" method="post" class="create-post">
-        <p>Note Title:<input type="text" size="30" name="title" style="color:#191919;"></p>
-        <p>Text:<textarea name="text" rows="5" cols="40" style="color:#191919;"></textarea></p>
-        <p><input type="submit" value="Post" style="color:#191919;"></p>
-        </form>
+        <div class="row">
+            <div class="col-md-4">
+                <form action="{{ '/character/%s.html'%char["name"] }}" method="post" class="create-post">
+                <p>Note Title:<input type="text" size="30" name="title" style="color:#191919;"></p>
+                <p>Text:<textarea name="text" rows="5" cols="30" style="color:#191919;"></textarea></p>
+                <p><input type="submit" value="Post" style="color:#191919;"></p>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <form action="{{ '/character/%s.html'%char["name"] }}" method="post">
+                <p>Item:<input type="text" size="30" name="item" style="color:#191919;"></p>
+                <p>Weight:<input type="text" size="5" name="weight" value="0" style="color:#191919;">
+                Cnt:<input type="text" size="5" name="count" value="1" style="color:#191919;"></p>
+                <p>Description:<textarea name="description" rows="2" cols="30" style="color:#191919;"></textarea></p>
+                <p>Damage:<input type="text" size="5" name="damage" style="color:#191919;">
+                    <input type="submit" value="Add" style="color:#191919;"></p>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <div class="well">
+                <h5>Weapons</h5>
+                <table class="table">
+                    <!-- <th>items</th><th>cnt</th><th>weight</th> -->
+                    {% for w in weapons %}
+                    <tr>
+                    <td align="center"><b>{{w.item}}</b></td>
+                    <td align="left"><b>+{{char["atk_mod"]}}</b></td>
+                    <td align="left"><b>{{w.damage}}</b></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                </div>
+            </div>
+        </div>
+        
         </div>
         <div class="col-md-2">
             <div class="well">
