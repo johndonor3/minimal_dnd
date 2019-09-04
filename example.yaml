@@ -1,0 +1,37 @@
+name:
+    "Napolean"
+base:
+    iniative: 3
+    speed: 30
+    proficiency: 2
+    hp: 40
+    ac: 19
+abilities:
+    strength: 18
+    dexterity: 12
+    constitution: 9
+    intelligence: 8
+    wisdom: 11
+    charisma: 5
+skills:
+    animal_handling: -1
+    arcana: -2
+    athletics: -1
+    deception: 3
+    history: 2
+    insight: 3
+    intimidation: -1
+    investigation: 0
+    medicine: 0
+    nature: 0
+    perception: 1
+    performance: 1
+    sleight_of_hand: 0
+    stealth: 0
+    survival: 10
+purse:
+    cp: 0
+    sp: 0
+    ep: 0
+    gp: 1000
+    pp: 0
