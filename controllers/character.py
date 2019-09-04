@@ -67,12 +67,17 @@ async def character(name):
         char = {k: dbChar[k] for k in dbChar.keys()}
 
     abils = await db.getAbilty(char["id"])
-    abils = {k: abils[k] for k in abils.keys()}
+    # abils = {k: abils[k] for k in abils.keys()}
+    char["strength"] = abils["strength"] 
     mods = {k: toModifier(abils[k]) for k in abils.keys()}
+
+    abils = [{"abil": k, "score": abils[k], "mod": toModifier(abils[k])} for k in abils.keys()]
+    
     skills = await db.getSkills(char["id"])
     skills = {k: skills[k] for k in skills.keys()}
     purse = await db.getPurse(char["id"])
-    purse = {k: purse[k] for k in purse.keys()}
+    # purse = {k: purse[k] for k in purse.keys()}
+    purse = [{"coin": k, "val": purse[k]} for k in purse.keys()]
 
     notes = await db.getNotes(char["id"])
     notes = {n["title"]: n["body"] for n in notes}
@@ -88,7 +93,7 @@ async def character(name):
     template_dict = getTemplateDictBase()
     template_dict.update({"char": char, 
                           "abils": abils,
-                          "mods": mods,
+                          # "mods": mods,
                           "skills": skills,
                           "purse": purse,
                           "notes": notes,

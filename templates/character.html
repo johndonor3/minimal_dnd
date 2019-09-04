@@ -37,38 +37,19 @@ function handleClick(evt) {
   }
 }
 
+j_abils = {{abils | tojson}}
+j_purse = {{purse | tojson}}
 </script>
 
 <div class="row">
     <div align=center>IDK character info? up here??</div>
     <div align=center>
         <div class="col-md-3">
-            <div class="well">
-                <table class="table">
-                <tr> <th> </th> <th align="center"> score </th> 
-                    <th align="center"> modifier </th> </tr>
-                {% for key in abils.keys() %}
-                <tr>
-                <td align="right"><b>{{key}}</b></td>
-                <td align="center"><b>{{abils[key]}}</b></td>
-                <td align="center"><b>{{mods[key]}}</b></td>
-                </tr>
-                {% endfor %}
-                </table>
+            <div class="well" id="abil_table">
+                
             </div>
             <div class="col-md-5">
-                <div class="well" style="height:280px;">
-                    <h4>Purse</h4>
-                    <table class="table">
-                    <col width="80">
-                    <col width="80">
-                    {% for key in purse.keys() %}
-                    <tr>
-                    <td align="center"><b>{{key}}</b></td>
-                    <td align="left"><b>{{purse[key]}}</b></td>
-                    </tr>
-                    {% endfor %}
-                    </table>
+                <div class="well" style="height:280px;" id="purse_table">
                 </div>
             </div>
             <div class="col-md-6">
@@ -108,7 +89,7 @@ function handleClick(evt) {
             <td align="center"><b>Initiative</b></th>
             <td align="center"><b>Speed</b></th>
             <td align="center"><b>Proficiency</b></th>
-            <td align="center"><b>cap.</b> {{abils["strength"]*15}} lbs</th>
+            <td align="center"><b>cap.</b> {{char["strength"]*15}} lbs</th>
             </tr>
             <tr>
             <td align="center"><b>{{char["ac"]}}</b></td>
@@ -181,5 +162,16 @@ function handleClick(evt) {
         </div> 
     </div>
 </div>
+
+<script src="../static/js/table.js" type="text/babel"> </script>
+<!-- 
+<script type="text/babel">
+const tab = <table> 
+tab += <tr> <td> boobs </td> </tr> </table>
+
+const domContainer = document.getElementById('abil_table');
+ReactDOM.render(tab, domContainer);
+</script>
+ -->
 
 {% endblock body %}
