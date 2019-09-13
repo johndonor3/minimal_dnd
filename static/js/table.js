@@ -54,6 +54,8 @@ function updatePurse(nom, val){
     form.submit();
 }
 
+const buttonStyle = {color:"#191919",}
+
 class Coin extends React.Component {
   constructor(props) {
     super(props);
@@ -63,14 +65,23 @@ class Coin extends React.Component {
   transaction(){
     var newCoin = prompt("Enter new value for "+this.state.nom, this.state.val);
     console.log(newCoin, this.state.nom, this.state.val);
-    updatePurse(this.state.nom, newCoin)
+    if(newCoin === null){
+      null
+    }
+    else if(Number.isNaN(parseInt(newCoin))){
+      alert("dumbass")
+      null
+    }
+    else{
+      updatePurse(this.state.nom, parseInt(newCoin))
+    }
   }
 
   render() {
     return (
       <p>
-        <b>{this.state.nom}</b>: {this.state.val}
-        <button onClick={this.transaction.bind(this)}>$</button>
+        <button onClick={this.transaction.bind(this)} style={buttonStyle}>$</button>
+        <b>  {this.state.nom}</b>: {this.state.val}
       </p>
 
     );
@@ -78,7 +89,7 @@ class Coin extends React.Component {
 }
 
 const purse = (
-  <div>
+  <div align="left">
   {j_purse.map(item => (<Coin key={item.coin} nom={item.coin} val={item.val}/>)
     )}
   </div>

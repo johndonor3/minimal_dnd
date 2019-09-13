@@ -46,15 +46,15 @@ j_purse = {{purse | tojson}}
 <div class="row">
     <div align=center>IDK character info? up here??</div>
     <div align=center>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="well" id="abil_table">
                 
             </div>
             <div class="col-md-5">
-                <div class="well" style="height:320px;" id="purse_table">
+                <div class="well" style="height:280px;" id="purse_table">
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <div class="well" style="height:280px;overflow:auto;">
                 <table class="table">
                     <th>items</th><th>cnt</th><th>weight</th>
@@ -69,7 +69,7 @@ j_purse = {{purse | tojson}}
                 </div>
             </div>
         </div> 
-        <div class="col-md-5">
+        <div class="col-md-6">
         <h1>Character info for {{char.name}} </h1>
         <table class="table" onclick="handleClick(event);" style="font-size:150%;">
             <col width="40">
@@ -117,17 +117,17 @@ j_purse = {{purse | tojson}}
         <div class="row">
             <div class="col-md-4">
                 <form action="{{ '/character/%s.html'%char["name"] }}" method="post" class="create-post">
-                <p>Note Title:<input type="text" size="30" name="title" style="color:#191919;"></p>
-                <p>Text:<textarea name="text" rows="5" cols="30" style="color:#191919;"></textarea></p>
+                <p>Note Title:<input type="text" name="title" style="color:#191919;"></p>
+                <p>Text:<textarea name="text" rows="5" style="color:#191919;"></textarea></p>
                 <p><input type="submit" value="Post" style="color:#191919;"></p>
                 </form>
             </div>
             <div class="col-md-4">
                 <form action="{{ '/character/%s.html'%char["name"] }}" method="post">
-                <p>Item:<input type="text" size="30" name="item" style="color:#191919;"></p>
+                <p>Item:<input type="text" name="item" style="color:#191919;"></p>
                 <p>Weight:<input type="text" size="5" name="weight" value="0" style="color:#191919;">
                 Cnt:<input type="text" size="5" name="count" value="1" style="color:#191919;"></p>
-                <p>Description:<textarea name="description" rows="2" cols="30" style="color:#191919;"></textarea></p>
+                <p>Description:<textarea name="description" rows="2" style="color:#191919;"></textarea></p>
                 <p>Damage:<input type="text" size="5" name="damage" style="color:#191919;">
                     <input type="submit" value="Add" style="color:#191919;"></p>
                 </form>
@@ -166,14 +166,5 @@ j_purse = {{purse | tojson}}
 </div>
 
 <script src="../static/js/table.js" type="text/babel"> </script>
-<!-- 
-<script type="text/babel">
-const tab = <table> 
-tab += <tr> <td> boobs </td> </tr> </table>
-
-const domContainer = document.getElementById('abil_table');
-ReactDOM.render(tab, domContainer);
-</script>
- -->
 
 {% endblock body %}
