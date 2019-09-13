@@ -9,11 +9,13 @@
 
 <script type="text/javascript">
 
-function updateHP(delta, name){
+const char_name = "{{char["name"]}}"
+
+function updateHP(delta){
 
     const form = document.createElement('form');
     form.method = "post";
-    form.action = "/character/".concat(name, ".html");
+    form.action = "/character/".concat(char_name, ".html");
 
 
     const hiddenField = document.createElement('input');
@@ -30,10 +32,10 @@ function handleClick(evt) {
   var node = evt.target;
 
   if (node.value == 'hp_p') {
-    updateHP(1, node.name);
+    updateHP(1);
   }
   else if (node.value == 'hp_m') {
-    updateHP(-1, node.name);
+    updateHP(-1);
   }
 }
 
@@ -81,7 +83,7 @@ j_purse = {{purse | tojson}}
             <td align="center"><b>AC</b></th>
             <td align="center"><b>HP</b></th>
             <td align="center">
-                <button type="button" name="{{char["name"]}}" value="hp_p"
+                <button type="button" value="hp_p"
                         style="background-color:#d6d6d6;
                             color:#191919;
                             font-size:18px;">+</button>
@@ -95,7 +97,7 @@ j_purse = {{purse | tojson}}
             <td align="center"><b>{{char["ac"]}}</b></td>
             <td align="center"><b>{{char["hp"]}}</b></td>
                 <td align="center">
-                <button type="button" name="{{char["name"]}}" value="hp_m"
+                <button type="button" value="hp_m"
                         style="background-color:#d6d6d6;
                             color:#191919;
                             font-size:18px;">-</button>

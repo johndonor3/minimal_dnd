@@ -181,6 +181,15 @@ async def updateCharacter(name, attr, value):
     await db.commit()
 
 
+async def updatePurse(cid, nom, val):
+    db = await get_db()
+    update = "SET {n} = {v}".format(n=nom, v=val)
+    await db.execute(
+         "UPDATE purse {} WHERE character_id == '{}'".format(update, cid),
+    )
+    await db.commit()
+
+
 async def addNote(cid, title, body):
     db = await get_db()
     

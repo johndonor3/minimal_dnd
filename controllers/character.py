@@ -66,6 +66,16 @@ async def character(name):
         dbChar = await db.getCharacter(name)
         char = {k: dbChar[k] for k in dbChar.keys()}
 
+    if "nom" in form:
+        nom = form["nom"]
+        val = int(form["val"])
+        # update is expecting 2 lists!
+        await db.updatePurse(char["id"], nom, val)
+
+        # then pull again
+        dbChar = await db.getCharacter(name)
+        char = {k: dbChar[k] for k in dbChar.keys()}
+
     abils = await db.getAbilty(char["id"])
     # abils = {k: abils[k] for k in abils.keys()}
     char["strength"] = abils["strength"] 

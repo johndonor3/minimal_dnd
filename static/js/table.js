@@ -31,6 +31,28 @@ class AbilTable extends React.Component {
   }
 }
 
+function updatePurse(nom, val){
+
+    const form = document.createElement('form');
+    form.method = "post";
+    form.action = "/character/".concat(char_name, ".html");
+
+    const hiddenField = document.createElement('input');
+    hiddenField.type = 'hidden';
+    hiddenField.name = "nom";
+    hiddenField.value = nom;
+    form.appendChild(hiddenField);
+
+    const secondField = document.createElement('input');
+    secondField.type = 'hidden';
+    secondField.name = "val";
+    secondField.value = val;
+    form.appendChild(secondField);
+
+    
+    document.body.appendChild(form);
+    form.submit();
+}
 
 class Coin extends React.Component {
   constructor(props) {
@@ -38,16 +60,17 @@ class Coin extends React.Component {
     this.state = {nom: props.nom, val: props.val};
   }
 
-  test(){
+  transaction(){
     var newCoin = prompt("Enter new value for "+this.state.nom, this.state.val);
     console.log(newCoin, this.state.nom, this.state.val);
+    updatePurse(this.state.nom, newCoin)
   }
 
   render() {
     return (
       <p>
         <b>{this.state.nom}</b>: {this.state.val}
-        <button onClick={this.test.bind(this)}>$</button>
+        <button onClick={this.transaction.bind(this)}>$</button>
       </p>
 
     );
