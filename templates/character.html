@@ -2,127 +2,223 @@
 {% set active_page = "char" %}
 {% block head %}
 
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: sans-serif;
+    color: rgba(255, 255, 255, .8);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+}
+
+.nav ul {
+    margin: 0;
+}
+
+.nav li {
+    display: inline;
+}
+
+.nav a {
+    display: inline-block;
+    padding: .5em;
+    color: white;
+    text-decoration: none;
+    font-size: 1.3em;
+}
+
+.nav a:hover {
+    background-color: rgba(255, 255, 255, .3)
+}
+
+.main-header {
+    background-color: rgba(0, 0, 0, 1);
+}
+
+/*.char-title {
+    position: absolute;
+    top: 0;
+    right: 50vm;
+    padding: 0;
+}*/
+
+.flexbox-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.flexbox-item {
+    background-color: #333;
+    border: 1px dashed #CF1D0C;
+    margin: 10px;
+}
+
+.skills {
+    min-width: 250;
+    flex-shrink: 0;
+    flex-grow: 1;
+}
+
+.char-main {
+    min-width: 550;
+    flex-grow: 3;
+}
+
+.items {
+    min-width: 300;
+    flex-shrink: 0;
+    flex-grow: 1;
+}
+
+.char-table {
+    align-items: center;
+}
+
+.table-cont {
+    border-bottom: 1px solid white;
+}
+
+table.center {
+    margin-left:auto; 
+    margin-right:auto;
+}
+
+.notes {
+    height: 200px;
+    overflow: auto;
+}
+
+</style>
+
 {% endblock head %}
 
 
 {% block body %}
 
+
+
 <script type="text/javascript">
 
-const char_name = "{{char["name"]}}"
+    const char_name = "{{char["name"]}}"
 
-function updateHP(delta){
+    function updateHP(delta){
 
-    const form = document.createElement('form');
-    form.method = "post";
-    form.action = "/character/".concat(char_name, ".html");
+        const form = document.createElement('form');
+        form.method = "post";
+        form.action = "/character/".concat(char_name, ".html");
 
 
-    const hiddenField = document.createElement('input');
-    hiddenField.type = 'hidden';
-    hiddenField.name = "hp";
-    hiddenField.value = delta;
-    form.appendChild(hiddenField);
-    
-    document.body.appendChild(form);
-    form.submit();
-}
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = "hp";
+        hiddenField.value = delta;
+        form.appendChild(hiddenField);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
 
-function handleClick(evt) {
-  var node = evt.target;
+    function handleClick(evt) {
+      var node = evt.target;
 
-  if (node.value == 'hp_p') {
-    updateHP(1);
-  }
-  else if (node.value == 'hp_m') {
-    updateHP(-1);
-  }
-}
+      if (node.value == 'hp_p') {
+        updateHP(1);
+      }
+      else if (node.value == 'hp_m') {
+        updateHP(-1);
+      }
+    }
 
-j_abils = {{abils | tojson}}
-j_purse = {{purse | tojson}}
+    j_abils = {{abils | tojson}}
+    j_purse = {{purse | tojson}}
 </script>
 
-<div class="row">
-    <div align=center>IDK character info? up here??</div>
-    <div align=center>
-        <div class="col-md-4">
-            <div class="well" id="abil_table">
-                
-            </div>
-            <div class="col-md-5">
-                <div class="well" style="height:280px;" id="purse_table">
-                </div>
-            </div>
-            <div class="col-md-7">
-                <div class="well" style="height:280px;overflow:auto;">
-                <table class="table">
-                    <th>items</th><th>cnt</th><th>weight</th>
-                    {% for i in items %}
-                    <tr>
-                    <td align="center"><b>{{i.item}}</b></td>
-                    <td align="left"><b>{{i.count}}</b></td>
-                    <td align="left"><b>{{i.weight}}</b></td>
-                    </tr>
-                    {% endfor %}
-                </table>
-                </div>
-            </div>
-        </div> 
-        <div class="col-md-6">
-        <h1>Character info for {{char.name}} </h1>
-        <table class="table" onclick="handleClick(event);" style="font-size:150%;">
-            <col width="40">
-            <col width="40">
-            <col width="20">
-            <col width="60">
-            <col width="60">
-            <col width="60">
-            <col width="100">
+<!-- <h1 class="char-title">Character info for {{char.name}} </h1> -->
+
+<div class="flexbox-container">
+    <div class="flexbox-item skills">
+        <div class="table-cont abil-table" id="abil_table">
+            
+        </div>
+
+        <div class="table-cont skill-table">
+            <table>
+            {% for key in skills.keys() %}
             <tr>
-            <td align="center"><b>AC</b></th>
-            <td align="center"><b>HP</b></th>
-            <td align="center">
-                <button type="button" value="hp_p"
-                        style="background-color:#d6d6d6;
-                            color:#191919;
-                            font-size:18px;">+</button>
-            </th>
-            <td align="center"><b>Initiative</b></th>
-            <td align="center"><b>Speed</b></th>
-            <td align="center"><b>Proficiency</b></th>
-            <td align="center"><b>cap.</b> {{char["strength"]*15}} lbs</th>
+            <td align="left"><b>{{key.replace("_", " ")}}</b></td>
+            <td align="right"><b>{{skills[key]}}</b></td>
             </tr>
-            <tr>
-            <td align="center"><b>{{char["ac"]}}</b></td>
-            <td align="center"><b>{{char["hp"]}}</b></td>
+            {% endfor %}
+            </table>
+        </div>
+
+        <div class="table-cont purse-table">
+            <div style="height:280px;" id="purse_table">
+            </div>
+        </div>
+
+
+    </div>
+    <div class="flexbox-item char-main">
+        <div class="table-cont char-table"> 
+            <table class="center" onclick="handleClick(event);" style="font-size:150%;">
+                <col width="40">
+                <col width="40">
+                <col width="20">
+                <col width="60">
+                <col width="60">
+                <col width="60">
+                <col width="100">
+                <tr>
+                <td align="center"><b>AC</b></th>
+                <td align="center"><b>HP</b></th>
                 <td align="center">
-                <button type="button" value="hp_m"
-                        style="background-color:#d6d6d6;
-                            color:#191919;
-                            font-size:18px;">-</button>
-            </th>
-            <td align="center"><b>{{char["iniative"]}}</b></td>
-            <td align="center"><b>{{char["speed"]}}</b></td>
-            <td align="center"><b>{{char["proficiency"]}}</b></td>
-            <td align="center"><b>gear</b> {{char["gear_lbs"]}} lbs</td>
-            </tr>
-        </table>
-        <div class="well" style="height:200px;overflow:auto;"> 
+                    <button type="button" value="hp_p"
+                            style="background-color:#d6d6d6;
+                                color:#191919;
+                                font-size:18px;">+</button>
+                </th>
+                <td align="center"><b>Initiative</b></th>
+                <td align="center"><b>Speed</b></th>
+                <td align="center"><b>Proficiency</b></th>
+                <td align="center"><b>cap.</b> {{char["strength"]*15}} lbs</th>
+                </tr>
+                <tr>
+                <td align="center"><b>{{char["ac"]}}</b></td>
+                <td align="center"><b>{{char["hp"]}}</b></td>
+                    <td align="center">
+                    <button type="button" value="hp_m"
+                            style="background-color:#d6d6d6;
+                                color:#191919;
+                                font-size:18px;">-</button>
+                </th>
+                <td align="center"><b>{{char["iniative"]}}</b></td>
+                <td align="center"><b>{{char["speed"]}}</b></td>
+                <td align="center"><b>{{char["proficiency"]}}</b></td>
+                <td align="center"><b>gear</b> {{char["gear_lbs"]}} lbs</td>
+                </tr>
+            </table>
+        </div>
+        <div class="table-cont notes"> 
             {% for title in notes.keys() %}
             <h4>{{title}}</h4>
             <p>{{notes[title]}} </p>
             {% endfor %}
         </div>
-        <div class="row">
-            <div class="col-md-4">
+        <div class="form">
+            <div>
                 <form action="{{ '/character/%s.html'%char["name"] }}" method="post" class="create-post">
                 <p>Note Title:<input type="text" name="title" style="color:#191919;"></p>
                 <p>Text:<textarea name="text" rows="5" style="color:#191919;"></textarea></p>
                 <p><input type="submit" value="Post" style="color:#191919;"></p>
                 </form>
             </div>
-            <div class="col-md-4">
+            <div>
                 <form action="{{ '/character/%s.html'%char["name"] }}" method="post">
                 <p>Item:<input type="text" name="item" style="color:#191919;"></p>
                 <p>Weight:<input type="text" size="5" name="weight" value="0" style="color:#191919;">
@@ -132,38 +228,39 @@ j_purse = {{purse | tojson}}
                     <input type="submit" value="Add" style="color:#191919;"></p>
                 </form>
             </div>
-            <div class="col-md-4">
-                <div class="well">
-                <h5>Weapons</h5>
-                <table class="table">
-                    <!-- <th>items</th><th>cnt</th><th>weight</th> -->
-                    {% for w in weapons %}
-                    <tr>
-                    <td align="center"><b>{{w.item}}</b></td>
-                    <td align="left"><b>+{{char["atk_mod"]}}</b></td>
-                    <td align="left"><b>{{w.damage}}</b></td>
-                    </tr>
-                    {% endfor %}
-                </table>
-                </div>
-            </div>
         </div>
-        
-        </div>
-        <div class="col-md-2">
-            <div class="well">
-                <table class="table">
-                {% for key in skills.keys() %}
+    
+    </div>
+    <div class="flexbox-item items">
+        <div class="table-cont item-table" style="height:280px;overflow:auto;">
+            <table>
+                <th>items</th><th>cnt</th><th>weight</th>
+                {% for i in items %}
                 <tr>
-                <td align="right"><b>{{key.replace("_", " ")}}</b></td>
-                <td align="center"><b>{{skills[key]}}</b></td>
+                <td align="center"><b>{{i.item}}</b></td>
+                <td align="left"><b>{{i.count}}</b></td>
+                <td align="left"><b>{{i.weight}}</b></td>
                 </tr>
                 {% endfor %}
-                </table>
-            </div>
-        </div> 
+            </table>
+        </div>
+
+        <div class="table-cont weapon-table">
+            <h5>Weapons</h5>
+            <table>
+                <!-- <th>items</th><th>cnt</th><th>weight</th> -->
+                {% for w in weapons %}
+                <tr>
+                <td align="center"><b>{{w.item}}</b></td>
+                <td align="left"><b>+{{char["atk_mod"]}}</b></td>
+                <td align="left"><b>{{w.damage}}</b></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
 </div>
+
 
 <script src="../static/js/table.js" type="text/babel"> </script>
 
