@@ -134,8 +134,70 @@ table.center {
       }
     }
 
+    function addItem(item){
+
+        if (item.length > 1) {
+            item = item[0]
+        }
+
+        const form2 = document.createElement('form');
+        form2.method = "post";
+        form2.action = "/character/".concat(char_name, ".html");
+
+        const hiddenField2 = document.createElement('input');
+        hiddenField2.type = 'hidden';
+        hiddenField2.name = "item";
+        hiddenField2.value = item.name;
+        form2.appendChild(hiddenField2);
+
+        const hiddenField3 = document.createElement('input');
+        hiddenField3.type = 'hidden';
+        hiddenField3.name = "weight";
+        hiddenField3.value = item.weight;
+        form2.appendChild(hiddenField3);
+
+        const hiddenField4 = document.createElement('input');
+        hiddenField4.type = 'hidden';
+        hiddenField4.name = "count";
+        hiddenField4.value = 1;
+        form2.appendChild(hiddenField4);
+
+        const hiddenField5 = document.createElement('input');
+        hiddenField5.type = 'hidden';
+        hiddenField5.name = "description";
+        if (item.desc) {
+            hiddenField5.value = item.desc;
+        }
+        else {
+            hiddenField5.value = "";
+        }
+        form2.appendChild(hiddenField5);
+
+        const hiddenField6 = document.createElement('input');
+        hiddenField6.type = 'hidden';
+        hiddenField6.name = "damage";
+        if (item.equipment_category == "Weapon") {
+            hiddenField6.value = item.damage.damage_dice;
+        }
+        else {
+            hiddenField6.value = null;
+        }
+
+        form2.appendChild(hiddenField6);
+
+        document.body.appendChild(form2);
+        form2.submit();
+    }
+
+    function checkItem(dummy) {
+        item_name = document.getElementById("itemForm").value;
+        console.log(item_name);
+        dndQuery("equipment", item_name, addItem);
+    }
+
     j_abils = {{abils | tojson}}
     j_purse = {{purse | tojson}}
+
 </script>
 
 <!-- <h1 class="char-title">Character info for {{char.name}} </h1> -->
@@ -219,14 +281,8 @@ table.center {
                 </form>
             </div>
             <div>
-                <form action="{{ '/character/%s.html'%char["name"] }}" method="post">
-                <p>Item:<input type="text" name="item" style="color:#191919;"></p>
-                <p>Weight:<input type="text" size="5" name="weight" value="0" style="color:#191919;">
-                Cnt:<input type="text" size="5" name="count" value="1" style="color:#191919;"></p>
-                <p>Description:<textarea name="description" rows="2" style="color:#191919;"></textarea></p>
-                <p>Damage:<input type="text" size="5" name="damage" style="color:#191919;">
-                    <input type="submit" value="Add" style="color:#191919;"></p>
-                </form>
+                <p>Item:<input type="text" id="itemForm" name="item" style="color:#191919;">
+                    <input type="submit" onclick="checkItem();" value="Add" style="color:#191919;"></p>
             </div>
         </div>
     
