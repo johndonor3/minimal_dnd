@@ -29,6 +29,8 @@ def init_db():
 
 from controllers.index import index_page
 from controllers.character import character_page
+from controllers.monster import monster_page
 
 app.register_blueprint(index_page)
 app.register_blueprint(character_page)
+app.register_blueprint(monster_page)

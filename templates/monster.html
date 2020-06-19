@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% set active_page = "monster" %}
+
+{% block head %}
+
+
+{% endblock head %}
+
+
+{% block body %}
+
+<div id="scary_dude">
+    <h2>test </h2>
+</div>
+
+<script type="text/babel">
+    function dndQuery(cat, name, targetFunc){
+    var result = null;
+    var url = 'http://localhost:3000/api/' + cat + '/' + name;
+    console.log(url);
+    try {
+        $.getJSON(url, targetFunc)
+        }
+    catch (err) {
+        alert("invalid db request!")
+        }
+    }
+
+    function drawTab(monster) {
+        const monsterTable = (
+            <div>
+                <div className="monster name-header">
+                    <h2>{monster.name}</h2>
+                    <p>{monster.size} {monster.type}, {monster.alignment}</p>
+                </div>
+                <div className="monster hit-armor">
+                    <p><b>Armor Class</b> {monster.armor_class}</p>
+                    <p><b>Hit Points</b> {monster.hit_points}</p>
+                    <p><b>walk speed</b> {monster.speed.walk}</p>
+                </div>
+                <div className="monster abil-table">
+                    abil table
+                </div>
+                <div className="monster char-info">
+                    <p><b>Skills</b> bs +2</p>
+                    <p><b>Languages</b> common</p>
+                    <p><b>Challenge</b> num (ex)</p>
+                </div>
+                <div className="monster special-abils">
+                    abils 
+                </div>
+                <div className="monster actions">
+                    
+                </div>
+                <div className="monster actions legendary-actions">
+                    
+                </div>
+            </div>
+        )
+
+        ReactDOM.render(monsterTable, document.getElementById('scary_dude'));
+    }
+
+    dndQuery("monsters", "acolyte", drawTab)
+    
+</script>
+
+{% endblock body %}
