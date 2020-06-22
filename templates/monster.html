@@ -13,6 +13,9 @@
     <h2>test </h2>
 </div>
 
+<!-- Many thanks for source material:
+    http://jsfiddle.net/basmith7/Z2sQK/ -->
+
 <script type="text/babel">
     function dndQuery(cat, name, targetFunc){
     var result = null;
@@ -26,42 +29,92 @@
         }
     }
 
+    function abilMod (score){
+        let mod = Math.floor((score - 10) / 2);
+        if (mod == 0) {
+            return score + "(0)";
+        }
+        else if (mod > 0) {
+            return score + "(+" + mod + ")";
+        }
+        else {
+            return score + "(-" + mod + ")";
+        } 
+    }
+
+    function combJson (iterObj) {
+        // iterate and combine json object to string
+        let outString = ""
+        jQuery.each(iterObj, function(n, val) { 
+                        outString = outString + n + " " + val + ", ";
+                        })
+
+        outString = outString.replace("_", " ")
+
+        return outString
+    }
+
     function drawTab(monster) {
+        const MonsterAttack = props => <div className="attack">
+
+        <span className="attackname">{props.name}. </span>
+        <span>{props.desc}</span>
+        </div>
+
         const monsterTable = (
-            <div>
-                <div className="monster name-header">
-                    <h2>{monster.name}</h2>
-                    <p>{monster.size} {monster.type}, {monster.alignment}</p>
+            <div className="monster">
+                <div className="name">{monster.name}</div>
+                <div className="description">{monster.size} {monster.type}, {monster.alignment}</div>
+
+                <div className="gradient"></div>
+
+                <div className="red">
+                    <div ><span className="bold red">Armor Class</span><span> {monster.armor_class} </span></div>
+                    <div><span className="bold red">Hit Points</span><span> {monster.hit_points} ({monster.hit_dice})</span></div>
+                    <div><span className="bold red">Speed</span><span> {monster.speed.walk} </span></div>
                 </div>
-                <div className="monster hit-armor">
-                    <p><b>Armor Class</b> {monster.armor_class}</p>
-                    <p><b>Hit Points</b> {monster.hit_points}</p>
-                    <p><b>walk speed</b> {monster.speed.walk}</p>
-                </div>
-                <div className="monster abil-table">
-                    abil table
-                </div>
-                <div className="monster char-info">
-                    <p><b>Skills</b> bs +2</p>
-                    <p><b>Languages</b> common</p>
-                    <p><b>Challenge</b> num (ex)</p>
-                </div>
-                <div className="monster special-abils">
-                    abils 
-                </div>
-                <div className="monster actions">
+
+                <div className="gradient"></div>
+
+                <table>
+                    <tr><th>STR    </th><th>DEX   </th><th>CON    </th><th>INT   </th><th>WIS   </th><th>CHA   </th></tr>
+                    <tr><td>{abilMod(monster.strength)}</td>
+                        <td>{abilMod(monster.dexterity)}</td>
+                        <td>{abilMod(monster.constitution)}</td>
+                        <td>{abilMod(monster.intelligence)}</td>
+                        <td>{abilMod(monster.wisdom)}</td>
+                        <td>{abilMod(monster.charisma)}</td></tr>
+                </table>
                     
-                </div>
+                <div className="gradient"></div>
+                    
+                <div><span className="bold">Senses: </span>
+                    <span>{combJson(monster.senses)}</span></div>
+
+                <div><span className="bold">Languages: </span><span>{monster.languages}</span></div>
+                <div><span className="bold">Challenge: </span><span>{monster.challenge_rating}</span></div> 
+                    
+                <div className="gradient"></div>
+
+                <div className="actions red">Actions</div>
+
+                {monster.actions.map(action => (
+                        <MonsterAttack name={action.name} desc={action.desc}/>
+                    ))}
+                
+
                 <div className="monster actions legendary-actions">
                     
                 </div>
+
+                
             </div>
         )
 
         ReactDOM.render(monsterTable, document.getElementById('scary_dude'));
     }
 
-    dndQuery("monsters", "acolyte", drawTab)
+    dndQuery("monsters", "ogre", drawTab)
     
 </script>
 
