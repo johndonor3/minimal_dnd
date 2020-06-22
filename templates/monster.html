@@ -51,14 +51,16 @@
         return outString
     }
 
-    function drawTab(monster) {
-        const MonsterAttack = props => <div className="attack">
+    const monsterState = {divs: [], names: []}
+
+    function monsterEntry(monster, useDiv) {
+        let MonsterAttack = props => <div className="attack">
 
         <span className="attackname">{props.name}. </span>
         <span>{props.desc}</span>
         </div>
 
-        const monsterTable = (
+        let monsterTable = (
             <div className="monster">
                 <div className="name">{monster.name}</div>
                 <div className="description">{monster.size} {monster.type}, {monster.alignment}</div>
@@ -99,17 +101,29 @@
                         <MonsterAttack name={action.name} desc={action.desc}/>
                     ))}
                 
-
                 <div className="monster actions legendary-actions">
                     
                 </div>
 
-                
             </div>
         )
 
-        ReactDOM.render(monsterTable, document.getElementById('scary_dude'));
+        ReactDOM.render(monsterTable, useDiv);
     }
+
+    function drawTab(monster) {
+        if (!monsterState.names.includes(monster.name)) {
+            monsterState.names.push(monster.name);
+            var newDiv = document.createElement("div")
+            monsterEntry(monster, newDiv)
+            let cont = document.getElementById("all-monsters")
+            cont.appendChild(newDiv)
+        }
+        else {
+            alert("You already added" + monster.name)
+    }
+    }
+
 
     function checkMonster() {
         dndQuery("monsters", document.getElementById("monsterForm").value, drawTab);
@@ -122,8 +136,9 @@
                <input type="submit" onclick="checkMonster();" value="Add"></p>
 </div>
 
-<div id="scary_dude">
-    <h2>test </h2>
+<div class="monster-container" id="all-monsters">
+
 </div>
+
 
 {% endblock body %}
