@@ -10,6 +10,10 @@ html, body {
     background-color: #333;
 }
 
+input {
+    color:#191919;
+}
+
 .nav ul {
     margin: 0;
 }

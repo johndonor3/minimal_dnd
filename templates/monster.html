@@ -9,13 +9,6 @@
 
 {% block body %}
 
-<div id="monsterForm">
-
-</div>
-
-<div id="scary_dude">
-    <h2>test </h2>
-</div>
 
 <!-- Many thanks for source material:
     http://jsfiddle.net/basmith7/Z2sQK/ -->
@@ -118,8 +111,19 @@
         ReactDOM.render(monsterTable, document.getElementById('scary_dude'));
     }
 
-    dndQuery("monsters", "ogre", drawTab)
+    function checkMonster() {
+        dndQuery("monsters", document.getElementById("monsterForm").value, drawTab);
+    }
     
 </script>
+
+<div>
+    <p>Monster:<input type="text" id="monsterForm" name="monster">
+               <input type="submit" onclick="checkMonster();" value="Add"></p>
+</div>
+
+<div id="scary_dude">
+    <h2>test </h2>
+</div>
 
 {% endblock body %}

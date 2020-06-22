@@ -97,9 +97,8 @@
         form2.submit();
     }
 
-    function checkItem(dummy) {
+    function checkItem() {
         item_name = document.getElementById("itemForm").value;
-        console.log(item_name);
         dndQuery("equipment", item_name, addItem);
     }
 
