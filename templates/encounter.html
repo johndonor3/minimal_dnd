@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{% set active_page = "char" %}
+{% block head %}
+
+
+{% endblock head %}
+
+
+{% block body %}
+
+
+
+<script type="text/javascript">
+    enc_chars = {{characters | tojson}}
+</script>
+
+
+
+<!-- <div class="flexbox-container">
+    <div class="flexbox-item" id="encounter-characters"> -->
+
+<div>
+    <div id="encounter-characters">
+        
+
+    </div>
+</div>
+
+<script type="text/babel">
+
+    function updateHP(name, delta){
+
+        const form = document.createElement('form');
+        form.method = "post";
+        form.action = "/encounter.html";
+
+
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = "hp";
+        hiddenField.value = delta;
+        form.appendChild(hiddenField);
+
+        const hiddenField2 = document.createElement('input');
+        hiddenField2.type = 'hidden';
+        hiddenField2.name = "name";
+        hiddenField2.value = name;
+        form.appendChild(hiddenField2);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function renderCharacters () {
+        console.log("rendering?")
+        let CharRow = props => <div className="char-row">
+            <span className="charName">{props.name}. </span>
+            <button onClick={() => updateHP(props.name, -1)}>-</button>
+            <strong>{props.hp}</strong>
+            <button onClick={() => updateHP(props.name, 1)}>+</button>
+            </div>
+
+        let charInfo = (
+            <div>
+                {enc_chars.map( c => (
+                    <CharRow name={c.name} hp={c.hp}/>
+                ))}
+            </div>
+        )
+        ReactDOM.render(charInfo, document.getElementById("encounter-characters"));
+    }
+
+    renderCharacters()
+
+</script>
+
+{% endblock body %}

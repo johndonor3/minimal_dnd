@@ -14,6 +14,12 @@ input {
     color:#191919;
 }
 
+button {
+    background-color:#d6d6d6;
+    color:#191919;
+    font-size:18px;
+}
+
 .nav ul {
     margin: 0;
 }
