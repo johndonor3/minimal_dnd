@@ -17,7 +17,6 @@ async def encounter():
     form = await request.form
 
     if "hp" in form:
-        print(form)
         delta = int(form["hp"])
         name = form["name"]
 
