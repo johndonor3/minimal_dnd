@@ -269,3 +269,18 @@ async def updateMonsterHP(mid, val):
          "UPDATE encounter_monster SET hp = {v} WHERE id == '{m}'".format(v=val, m=mid),
     )
     await db.commit()
+
+async def deleteCharacterByID(cid):
+    db = await get_db()
+    await db.execute("DELETE FROM characters WHERE id == '{}'".format(cid))
+    await db.commit()
+
+async def deleteCharacterByName(name):
+    db = await get_db()
+    await db.execute("DELETE FROM characters WHERE name == '{}'".format(name))
+    await db.commit()
+
+async def deleteMonster(mid):
+    db = await get_db()
+    await db.execute("DELETE FROM encounter_monster WHERE id == '{}'".format(mid))
+    await db.commit()

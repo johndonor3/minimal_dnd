@@ -1,14 +1,14 @@
-function dndQuery(cat, name, targetFunc){
-    var result = null;
+function dndQuery(cat, name, targetFunc) {
     var url = 'http://localhost:3000/api/' + cat + '/' + name;
-    console.log(url);
-    try {
-        $.getJSON(url, targetFunc)
-        }
-    catch (err) {
-        alert("invalid db request!")
-        }
-    }
+    return fetch(url)
+    .then((response) => response.json())
+    .then((mon) => {
+        targetFunc(mon);
+   })
+   .catch((error) => {
+     console.log(error);
+    });
+}
 
 function abilMod (score){
     let mod = Math.floor((score - 10) / 2);
@@ -104,7 +104,7 @@ function drawTab(monster) {
         cont.appendChild(newDiv)
     }
     else {
-        alert("You already added" + monster.name)
+        alert("You already added " + monster.name)
     }
 }
 

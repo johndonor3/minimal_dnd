@@ -61,6 +61,7 @@
         .then((response) => response.json())
         .then((mon) => {
             addMonster(name, mon.hit_points);
+            drawTab(mon);
        })
        .catch((error) => {
          console.log(error);
@@ -75,7 +76,7 @@
 
 <div class="flexbox-container">
     <div class="flexbox-item encounter-characters">
-        <div class="table-cont" id="encounter-characters">
+        <div class="combat-name-hp-init" id="encounter-characters">
             
         </div>
         <div class="gradient"></div>
@@ -83,7 +84,7 @@
             <p>Add monster:<input type="text" id="addEncMonster" name="name">
                     <input type="submit" onclick="checkEncMonster();" value="Add"></p>
         </div>
-        <div class="table-cont" id="encounter-monsters">
+        <div class="combat-name-hp-init" id="encounter-monsters">
             
         </div>
 

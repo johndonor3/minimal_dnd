@@ -20,6 +20,21 @@ function updateHP(name, delta){
     form.submit();
 }
 
+function removeMonster(mid){
+
+    let form = document.createElement('form');
+    form.method = "post";
+
+    let hiddenField = document.createElement('input');
+    hiddenField.type = 'hidden';
+    hiddenField.name = "remove_monster";
+    hiddenField.value = mid;
+    form.appendChild(hiddenField);
+    
+    document.body.appendChild(form);
+    form.submit();
+}
+
 class EncChar extends React.Component {
   constructor(props) {
     super(props);
@@ -68,6 +83,22 @@ let charInfo = (
 ReactDOM.render(charInfo, document.getElementById('encounter-characters'));
 
 
+const EncMonsterState = {divs: [], names: []}
+
+function drawTab(monster) {
+    if (!EncMonsterState.names.includes(monster.name)) {
+        EncMonsterState.names.push(monster.name);
+        var newDiv = document.createElement("div")
+        monsterEntry(monster, newDiv)
+        let cont = document.getElementById("monster-encounter-container")
+        cont.appendChild(newDiv)
+    }
+}
+
+function fetchEncMonster(name) {
+    dndQuery("monsters", name, drawTab);
+}
+
 function updateMonHP(mid, delta){
 
     const form2 = document.createElement('form');
@@ -113,7 +144,11 @@ class EncMonster extends React.Component {
   render() {
     return (
       <div className="char-row">
-          <p><span className="charName">{this.state.name}  </span>
+          <p>
+          <span onClick={() => fetchEncMonster(this.state.name)} className="charName">
+          {this.state.name}
+          <button onClick={() => removeMonster(this.state.id)}>x</button>
+          </span>
           <button onClick={() => updateMonHP(this.state.id, -1)}>-</button>
           <strong> {this.state.hp} </strong>
           <button onClick={() => updateMonHP(this.state.id, 1)}>+</button>
@@ -134,3 +169,4 @@ let monsterInfo = (
 )
 
 ReactDOM.render(monsterInfo, document.getElementById('encounter-monsters'));
+

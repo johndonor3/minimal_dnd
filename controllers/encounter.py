@@ -48,12 +48,14 @@ async def encounter(name):
 
         await db.updateMonsterHP(mid, hp+delta)
 
+    if "remove_monster" in form:
+        mid = int(form["remove_monster"])
+        await db.deleteMonster(mid)
+
     chars = await db.getCharacters()
 
     monsters = await db.getEncMonsters(eid)
     monsters = [{"id": m["id"], "name": m["name"], "hp": m["hp"]} for m in monsters]
-
-    # chars = {k: dbChar[k] for k in dbChar.keys()}
 
     characters = [{"name": c["name"], "hp": c["hp"]} for c in chars]
 

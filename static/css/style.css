@@ -149,17 +149,30 @@ table.center {
 /* encounter code below*/
 
 .encounter-characters {
-    min-width: 300;
     flex-shrink: 0;
     flex-grow: 1;
 }
 .monster-encounter-container {
-    flex-grow: 3;
+    min-width: 600px;
+    flex-grow: 6;
 }
 
 .char-row {
-   text-align: center;
+   text-align: left;
 }
+
+
 .char-row input {
     width: 5%;
+}
+
+span.charName {
+    font-weight:bold;
+    font-size:120%;
+    display: inline-block;
+    width: 12em;
+}
+
+.charName:hover {
+    background-color: rgba(255, 255, 255, .3)
 }
