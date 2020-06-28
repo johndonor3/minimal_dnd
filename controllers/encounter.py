@@ -10,11 +10,15 @@ import dbTools as db
 
 encounter_page = Blueprint("encounter", __name__)
 
-@encounter_page.route('/encounter.html', methods=["GET", "POST"])
-async def encounter():
+@encounter_page.route('/encounter/<name>.html', methods=["GET", "POST"])
+async def encounter(name):
     """ character detail """
 
     form = await request.form
+
+    dbEnc = await db.getEncounter(name)
+
+    encounter = {k: dbEnc[k] for k in dbEnc.keys()}
 
     if "hp" in form:
         delta = int(form["hp"])
@@ -35,14 +39,3 @@ async def encounter():
     template_dict = getTemplateDictBase()
     template_dict.update({"characters": characters})
     return await render_template("encounter.html", **template_dict)
-
-
-# @character_page.route('/character/updateHP')
-# async def updateHP():
-#     """ character detail """
-#     test_char = creature(name="AEGON THE CONQUERERER", race="human")
-    
-#     template_dict = getTemplateDictBase()
-#     template_dict.update({"test_char": test_char.toDict(),
-#                           "char_obj": test_char})
-#     return await render_template("character.html", **template_dict)

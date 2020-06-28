@@ -91,6 +91,35 @@ async def getItems(cid):
     return await cur.fetchall()
 
 
+async def getEncounters():
+    db = await get_db()
+    cur = await db.execute(
+    """SELECT *
+          FROM encounters
+      ORDER BY id DESC""",
+    )
+    return await cur.fetchall()
+
+
+async def getEncounter(name):
+    db = await get_db()
+    cur = await db.execute(
+    """SELECT *
+          FROM encounters
+      WHERE title == '{}' """.format(name),
+    )
+    return await cur.fetchone()
+
+async def getEncMonsters(eid):
+    db = await get_db()
+    cur = await db.execute(
+    """SELECT *
+          FROM encounter_monster
+      WHERE encounter_id == '{}' """.format(eid),
+    )
+    return await cur.fetchall()
+
+
 async def addCharacter(name="moron", base={}, abilities={}, skills={}, purse={}):
     loaded = await getCharacters()
     names = [l["name"] for l in loaded]
@@ -209,5 +238,25 @@ async def addItem(cid, item, weight, description, weapon=False,
                                weapon, damage, count)
                 VALUES (?, ?, ?, ?, ?, ?, ?)""",
          [cid, item, weight, description, weapon, damage, count],
+    )
+    await db.commit()
+
+async def addEncounter(title):
+    db = await get_db()
+    
+    await db.execute(
+         """INSERT INTO encounters (title)
+                VALUES (?)""",
+         [title],
+    )
+    await db.commit()
+
+async def addMonsterToEncounter(eid, name, hp):
+    db = await get_db()
+    
+    await db.execute(
+         """INSERT INTO encounter_monster (encounter_id, name, hp)
+                VALUES (?, ?, ?)""",
+         [eid, name, hp],
     )
     await db.commit()

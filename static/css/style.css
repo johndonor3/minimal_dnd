@@ -79,15 +79,6 @@ button {
     flex-grow: 1;
 }
 
-.encounter-characters {
-    min-width: 300;
-    flex-shrink: 0;
-    flex-grow: 1;
-}
-.monster-encounter-container {
-    flex-grow: 3;
-}
-
 .char-table {
     align-items: center;
 }
@@ -106,7 +97,7 @@ table.center {
     overflow: auto;
 }
 
-
+/* monster code below*/
 .gradient {
     background: linear-gradient(10deg, #A73335, white);
     height:5px;
@@ -155,6 +146,16 @@ table.center {
     font-style:italic;
 }
 
+/* encounter code below*/
+
+.encounter-characters {
+    min-width: 300;
+    flex-shrink: 0;
+    flex-grow: 1;
+}
+.monster-encounter-container {
+    flex-grow: 3;
+}
 
 .char-row {
    text-align: center;

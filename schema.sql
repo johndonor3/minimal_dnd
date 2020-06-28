@@ -74,3 +74,16 @@ CREATE TABLE items (
    count INT NOT NULL
 );
 
+DROP TABLE IF EXISTS encounters;
+CREATE TABLE encounters (
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   title TEXT NOT NULL
+);
+
+DROP TABLE IF EXISTS encounter_monster;
+CREATE TABLE encounter_monster (
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   encounter_id INT NOT NULL,
+   name TEXT NOT NULL,
+   hp INT NOT NULL
+);

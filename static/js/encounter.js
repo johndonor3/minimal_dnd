@@ -1,8 +1,7 @@
-function updateHP(name, delta){
+function updateHP(name, delta, encounter_title){
 
     const form = document.createElement('form');
     form.method = "post";
-    form.action = "/encounter.html";
 
 
     const hiddenField = document.createElement('input');
@@ -34,15 +33,13 @@ class EncChar extends React.Component {
   }
 
   updateInit(event){
-    console.log(event.target.value)
     let parsed = parseInt(event.target.value);
     if (isNaN(parsed)) {
       this.setState({init: event.target.value});
     }
     else {
       this.setState({init: parsed});
-    }
-    
+    }  
   }
 
   render() {

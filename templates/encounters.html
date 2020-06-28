@@ -1,0 +1,27 @@
+{% set active_page = "index" %}
+{% extends "layout.html" %}
+
+{% block head %}
+  <title>Encounters</title>
+{% endblock head %}
+
+{% block body %}
+
+<div class=well>
+    <div class=row>
+        <div align=center><h1>Saved Encounters</h1></div>
+        {% for c in encounters %}
+        <a href="{{ '/encounter/%s.html'%c.title }}">{{c.title}} <br></a>
+        {% endfor %}
+    </div>
+</div>
+
+
+<!-- <h2>Upload a new character, or overwrite an existing one</h2> -->
+<h4>Create new encounter</h4>
+<form method=post>
+  <input type=text name=encounter>
+  <input type=submit value=Create>
+</form>
+
+{% endblock body %}

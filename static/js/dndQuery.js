@@ -19,7 +19,7 @@ function abilMod (score){
         return score + "(+" + mod + ")";
     }
     else {
-        return score + "(-" + mod + ")";
+        return score + "(" + mod + ")";
     }
 }
 
