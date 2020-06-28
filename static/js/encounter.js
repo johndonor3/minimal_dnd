@@ -1,4 +1,4 @@
-function updateHP(name, delta, encounter_title){
+function updateHP(name, delta){
 
     const form = document.createElement('form');
     form.method = "post";
@@ -19,7 +19,6 @@ function updateHP(name, delta, encounter_title){
     document.body.appendChild(form);
     form.submit();
 }
-
 
 class EncChar extends React.Component {
   constructor(props) {
@@ -67,3 +66,71 @@ let charInfo = (
 )
 
 ReactDOM.render(charInfo, document.getElementById('encounter-characters'));
+
+
+function updateMonHP(mid, delta){
+
+    const form2 = document.createElement('form');
+    form2.method = "post";
+
+    const hiddenField3 = document.createElement('input');
+    hiddenField3.type = 'hidden';
+    hiddenField3.name = "hp_delta";
+    hiddenField3.value = delta;
+    form2.appendChild(hiddenField3);
+
+    const hiddenField4 = document.createElement('input');
+    hiddenField4.type = 'hidden';
+    hiddenField4.name = "monster_id";
+    hiddenField4.value = mid;
+    form2.appendChild(hiddenField4);
+    
+    document.body.appendChild(form2);
+    form2.submit();
+}
+
+class EncMonster extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {name: props.name, hp: props.hp, id: props.id,
+                  init: window.localStorage.getItem(props.id+'init') || ''};
+  }
+
+  componentDidUpdate(){
+    window.localStorage.setItem(this.state.id+'init', this.state.init);
+  }
+
+  updateInit(event){
+    let parsed = parseInt(event.target.value);
+    if (isNaN(parsed)) {
+      this.setState({init: event.target.value});
+    }
+    else {
+      this.setState({init: parsed});
+    }  
+  }
+
+  render() {
+    return (
+      <div className="char-row">
+          <p><span className="charName">{this.state.name}  </span>
+          <button onClick={() => updateMonHP(this.state.id, -1)}>-</button>
+          <strong> {this.state.hp} </strong>
+          <button onClick={() => updateMonHP(this.state.id, 1)}>+</button>
+          <span>   </span>
+          <input value={this.state.init} onChange={this.updateInit.bind(this)} />
+          </p>
+      </div>
+    );
+  }
+}
+
+let monsterInfo = (
+  <div className="monster-encounter-table">
+      {enc_monsters.map( c => (
+          <EncMonster key={c.id} id={c.id} name={c.name} hp={c.hp}/>
+      ))}
+  </div>
+)
+
+ReactDOM.render(monsterInfo, document.getElementById('encounter-monsters'));

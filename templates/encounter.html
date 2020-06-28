@@ -12,10 +12,80 @@
 
 <script type="text/javascript">
     enc_chars = {{characters | tojson}}
+    enc_monsters = {{monsters | tojson}}
+
+    function addMonster(name, hp){
+
+        if (!Number.isInteger(hp)) {
+            hp = addManualMonster(name)    
+        }
+
+        if(hp === null){
+          return null;
+        }
+
+        const form2 = document.createElement('form');
+        form2.method = "post";
+
+        const hiddenField3 = document.createElement('input');
+        hiddenField3.type = 'hidden';
+        hiddenField3.name = "monster_name";
+        hiddenField3.value = name;
+        form2.appendChild(hiddenField3);
+
+        const hiddenField4 = document.createElement('input');
+        hiddenField4.type = 'hidden';
+        hiddenField4.name = "monster_hp";
+        hiddenField4.value = hp;
+        form2.appendChild(hiddenField4);
+        
+        document.body.appendChild(form2);
+        form2.submit();
+    }
+
+    function addManualMonster(name){
+        let hp = prompt(name + " doesn't exist; enter hp to add manually or nothing to cancel");
+        if(hp === null){
+          return null;
+        }
+        else if(Number.isNaN(parseInt(hp))){
+          return null;
+        }
+        else{
+          return parseInt(hp);
+        }
+    }
+
+    function fetchMonster(name) {
+        return fetch('http://localhost:3000/api/monsters' + '/' + name)
+        .then((response) => response.json())
+        .then((mon) => {
+            addMonster(name, mon.hit_points);
+       })
+       .catch((error) => {
+         console.log(error);
+        });
+    }
+
+    function checkEncMonster(){
+      let monster_name = document.getElementById("addEncMonster").value;
+      fetchMonster(monster_name);
+    }
 </script>
 
 <div class="flexbox-container">
-    <div class="flexbox-item encounter-characters" id="encounter-characters">
+    <div class="flexbox-item encounter-characters">
+        <div class="table-cont" id="encounter-characters">
+            
+        </div>
+        <div class="gradient"></div>
+        <div class="form">
+            <p>Add monster:<input type="text" id="addEncMonster" name="name">
+                    <input type="submit" onclick="checkEncMonster();" value="Add"></p>
+        </div>
+        <div class="table-cont" id="encounter-monsters">
+            
+        </div>
 
     </div>
 

@@ -110,6 +110,7 @@ async def getEncounter(name):
     )
     return await cur.fetchone()
 
+
 async def getEncMonsters(eid):
     db = await get_db()
     cur = await db.execute(
@@ -258,5 +259,13 @@ async def addMonsterToEncounter(eid, name, hp):
          """INSERT INTO encounter_monster (encounter_id, name, hp)
                 VALUES (?, ?, ?)""",
          [eid, name, hp],
+    )
+    await db.commit()
+
+async def updateMonsterHP(mid, val):
+    db = await get_db()
+
+    await db.execute(
+         "UPDATE encounter_monster SET hp = {v} WHERE id == '{m}'".format(v=val, m=mid),
     )
     await db.commit()
