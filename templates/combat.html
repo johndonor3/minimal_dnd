@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% set active_page = "char" %}
+{% block head %}
+
+
+{% endblock head %}
+
+
+{% block body %}
+
+<div>
+    <div>
+        <button type="button" onclick=resizeGrid(-5)>-</button>
+        <button type="button" onclick=resizeGrid(5)>+</button>
+    </div>
+    <canvas id='myCanvas' width="1000" height="1000"></canvas>
+</div>
+
+<script src="../static/js/combat.js"> </script>
+
+{% endblock body %}

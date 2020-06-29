@@ -32,9 +32,11 @@ from controllers.character import character_page
 from controllers.monster import monster_page
 from controllers.encounter import encounter_page
 from controllers.encounter_top import encounters_page
+from controllers.combat import combat_page
 
 app.register_blueprint(index_page)
 app.register_blueprint(character_page)
 app.register_blueprint(monster_page)
 app.register_blueprint(encounter_page)
 app.register_blueprint(encounters_page)
+app.register_blueprint(combat_page)
