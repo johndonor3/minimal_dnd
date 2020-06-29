@@ -8,10 +8,16 @@
 
 {% block body %}
 
+<script type="text/javascript">
+    enc_chars = {{characters | tojson}}
+    enc_monsters = {{monsters | tojson}}
+</script>
+
 <div>
     <div>
         <button type="button" onclick=resizeGrid(-5)>-</button>
         <button type="button" onclick=resizeGrid(5)>+</button>
+        <h3>{{encounter_name}}</h3>
     </div>
     <canvas id='myCanvas' width="1000" height="1000"></canvas>
 </div>

@@ -15,6 +15,7 @@ var gridSize = 40;
 function resizeGrid(delta) {
     // let intDelta = parseInt(event.target.value);
     gridSize += delta;
+    drawInit();
     drawAll();
 }
 
@@ -30,13 +31,68 @@ window.onscroll=function(e){ reOffset(); }
 window.onresize=function(e){ reOffset(); }
 canvas.onresize=function(e){ reOffset(); }
 
+
+function convertSize(size) {
+    // relative to 5ft gridsize
+
+    // damn right. either query api or add to db
+    // looks like it may be easier in db :/
+    if (size == "Tiny") {
+        return 0.5
+    }
+    else if (size == "Large") {
+        return 2
+    }
+    else if (size == "Huge") {
+        return 3
+    }
+    else if (size == "Gargantuan") {
+        return 4
+    }
+    // either small or medium
+    else {
+        return 1
+    }
+}
+
 // save relevant information about shapes drawn on the canvas
 var shapes=[];
-// define one circle and save it in the shapes[] array
-shapes.push( {x:30, y:30, radius:15, color:'blue'} );
-// define one rectangle and save it in the shapes[] array
-shapes.push( {x:100, y:-1, width:75, height:35, color:'red'} );
+var texts=[];
 
+function drawInit(){
+    shapes=[];
+    texts=[];
+    for(var i=0; i < enc_chars.length; i++){
+        let char = enc_chars[i];
+        var size = Math.floor(gridSize*0.5)
+        shapes.push( {x:i*size+gridSize/2, y:gridSize/2, radius:size, color:'blue'} );
+        let assigned = false;
+        let tried = 1;
+        while (!assigned) {
+            let useName = char.name.slice(0, tried);
+            if (texts.includes(useName)) {
+                tried += 1;
+            }
+            else {
+                texts.push({x:i*size+gridSize/3, y:gridSize/2, text: useName});
+                assigned = true;
+            }
+            if (tried > char.name.length) {
+                texts.push({x:i*size+gridSize/3, y:gridSize/2, text: useName});
+                assigned = true;
+            }
+        }
+    }
+
+    for(var i=0; i < enc_monsters.length; i++){
+        let monster = enc_monsters[i];
+        var size = Math.floor(gridSize*convertSize(monster.size))
+        shapes.push( {x:2*i*size+gridSize, y:2*gridSize, width:size, height:size, color:'red'} );
+        texts.push( {x:2*i*size+gridSize*1.1, y:2.3*gridSize, text: monster.name[0] + " " + monster.id%100})
+    }
+}
+
+drawInit()
 // drag related vars
 var isDragging=false;
 var startX,startY;
@@ -139,6 +195,10 @@ function handleMouseMove(e){
     var selectedShape=shapes[selectedShapeIndex];
     selectedShape.x+=dx;
     selectedShape.y+=dy;
+
+    var selectedText=texts[selectedShapeIndex];
+    selectedText.x+=dx;
+    selectedText.y+=dy;
     // clear the canvas and redraw all shapes
     drawAll();
     // update the starting drag position (== the current mouse position)
@@ -186,6 +246,7 @@ function drawAll(){
                 // it's a circle
                 ctx.beginPath();
                 ctx.arc(shape.x,shape.y,shape.radius,0,Math.PI*2);
+                ctx.closePath();
                 ctx.fillStyle=shape.color;
                 ctx.fill();
             }else if(shape.width){
@@ -193,6 +254,13 @@ function drawAll(){
                 ctx.fillStyle=shape.color;
                 ctx.fillRect(shape.x,shape.y,shape.width,shape.height);
             }
+            var txt = texts[i];
+            console.log(txt)
+            ctx.font = "20px serif";
+            ctx.fillStyle = "white";
+            ctx.textAlign = "left";
+            ctx.textBaseline = "top";
+            ctx.fillText(txt.text, txt.x, txt.y);
         }
     }
 }

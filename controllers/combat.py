@@ -4,6 +4,7 @@ import re
 
 from quart import render_template, Blueprint, request, flash
 
+import dbTools as db
 from . import getTemplateDictBase
 
 
@@ -13,6 +14,9 @@ combat_page = Blueprint("combat", __name__)
 async def combat():
     """ character detail """
 
-    template = getTemplateDictBase()
+    encounters = await db.getEncounters()
 
-    return await render_template("combat.html", **template)
+    template_dict = getTemplateDictBase()
+    template_dict.update({"encounters": encounters})
+
+    return await render_template("combatTop.html", **template_dict)
