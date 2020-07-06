@@ -159,6 +159,80 @@ var startX,startY;
 // hold the index of the shape being dragged (if any)
 var selectedShapeIndex;
 
+function populateLatest() {
+    // populate latest selection div
+    let thisIndex = selectedShapeIndex;
+    let currentShape = shapes[selectedShapeIndex];
+    let thisText = texts[selectedShapeIndex];
+    let latestDiv = document.getElementById("lastMonster");
+    latestDiv.innerHTML = "<h2>Details for " + thisText.text + "</h2>";
+
+    if (currentShape.radius) {
+        let radiusDiv = document.createElement("DIV");
+        let radiusForm = document.createElement("INPUT");
+
+        radiusForm.setAttribute("type", "text");
+        radiusForm.setAttribute("size", 5);
+        radiusForm.setAttribute("value", currentShape.radius);
+
+        let wBtn = document.createElement("BUTTON"); // Create Button
+
+        wBtn.textContent = "Update radius";
+
+        wBtn.onclick = function() {
+            currentShape.radius = radiusForm.value;
+            drawAll();
+        };
+
+        radiusDiv.appendChild(radiusForm);
+        radiusDiv.appendChild(wBtn);
+        latestDiv.appendChild(radiusDiv);
+    }
+    else {
+        let widthDiv = document.createElement("DIV");
+        let widthForm = document.createElement("INPUT");
+
+        widthForm.setAttribute("type", "text");
+        widthForm.setAttribute("size", 5);
+        widthForm.setAttribute("value", currentShape.width);
+       
+        let wBtn = document.createElement("BUTTON"); // Create Button
+
+        wBtn.textContent = "Update width";
+
+        wBtn.onclick = function() {
+            currentShape.width = widthForm.value;
+            drawAll();
+        };
+
+        widthDiv.appendChild(widthForm);
+        widthDiv.appendChild(wBtn);
+        latestDiv.appendChild(widthDiv);
+
+        let heightDiv = document.createElement("DIV");
+        let heightForm = document.createElement("INPUT");
+        
+        heightForm.setAttribute("type", "text");
+        heightForm.setAttribute("size", 5);
+        heightForm.setAttribute("value", currentShape.height);
+
+        let hBtn = document.createElement("BUTTON"); // Create Button
+
+        hBtn.textContent = "Update height";
+
+        hBtn.onclick = function() {
+            currentShape.height = sizeForm.value;
+            drawAll();
+        };
+
+        heightDiv.appendChild(heightForm);
+        heightDiv.appendChild(hBtn);
+        latestDiv.appendChild(heightDiv);
+    }
+
+}
+
+
 // draw the shapes on the canvas
 snapToGrid();
 drawAll();
@@ -210,6 +284,7 @@ function handleMouseDown(e){
             // the mouse is inside this shape
             // select this shape
             selectedShapeIndex=i;
+            populateLatest();
             // set the isDragging flag
             isDragging=true;
             // and return (==stop looking for 
@@ -290,6 +365,17 @@ function drawGrid(ctx, cw, ch){
     }
 }
 
+function createImage(x, y, w, h){
+  img = new Image();
+  console.log("Drawing", w, h);
+  img.addEventListener('load', function () {
+    ctx.drawImage(this, x, y, w, h);
+  });
+  // img.src = '/uploads/dragon_head_silhouette.svg';
+  img.src = '/uploads/stirge.jpeg';
+};
+
+
 // clear the canvas and 
 // redraw all shapes in their current positions
 function drawAll(){
@@ -324,5 +410,7 @@ function drawAll(){
             ctx.textBaseline = "top";
             ctx.fillText(txt.text, txt.x, txt.y);
         }
+
+        // createImage(400, 400, gridSize, gridSize);
     }
 }

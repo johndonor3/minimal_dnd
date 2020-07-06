@@ -37,7 +37,12 @@
     function addMonster(name, mon){
 
         let hp = mon.hit_points;
-        let size = convertSize(mon.size);
+        try {
+            let size = convertSize(mon.size);
+        }
+        catch {
+            let size = null;
+        }
 
         if (!Number.isInteger(hp)) {
             let manual = addManualMonster(name);
@@ -114,7 +119,7 @@
         </div>
         <div class="gradient"></div>
         <div class="form">
-            <p>Add monster:<input type="text" id="addEncMonster" name="name">
+            <p>Add monster:<input type="text" id="addEncMonster" name="monster">
                     <input type="submit" onclick="checkEncMonster();" value="Add"></p>
         </div>
         <div class="combat-name-hp-init" id="encounter-monsters">

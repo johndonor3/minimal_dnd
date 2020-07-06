@@ -34,7 +34,10 @@
               {% endfor %}
           </div>
         </div>
+        <div class="gradient"></div>
+        <div class="monster-info" id="lastMonster">
 
+        </div>
     </div>
     <div class="flexbox-item monster-pics">
         <form method=post enctype=multipart/form-data>
@@ -110,16 +113,21 @@
 
     function cacheSession() {
         window.localStorage.setItem('{{encounter_name}}'+'.monsters', visibleMonsters);
+        alert("saved!")
     }
 
     function showEverything() {
         var cachedMonsters = window.localStorage.getItem('{{encounter_name}}'+'.monsters') || [];
 
+        if (cachedMonsters.length == 0) {
+            return;
+        }
+
         let temp = cachedMonsters.split(",")
         temp.forEach((t) =>{
             visibleMonsters.push(t);
         })
-        console.log("loading!!", visibleMonsters);
+
         for (i = 0; i < visibleMonsters.length; i++) {
           var mName = visibleMonsters[i];
           setVisibleImg(mName);
