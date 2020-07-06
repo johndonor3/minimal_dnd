@@ -242,23 +242,31 @@ async def addItem(cid, item, weight, description, weapon=False,
     )
     await db.commit()
 
-async def addEncounter(title):
+async def addEncounter(title, mapName):
     db = await get_db()
     
     await db.execute(
-         """INSERT INTO encounters (title)
-                VALUES (?)""",
-         [title],
+         """INSERT INTO encounters (title, useMap)
+                VALUES (?, ?)""",
+         [title, mapName],
     )
     await db.commit()
 
-async def addMonsterToEncounter(eid, name, hp):
+async def updateEncounterMap(eid, mapName):
+    db = await get_db()
+
+    await db.execute(
+         "UPDATE encounters SET useMap = '{v}' WHERE id == '{i}'".format(v=mapName, i=eid),
+    )
+    await db.commit()
+
+async def addMonsterToEncounter(eid, name, hp, size):
     db = await get_db()
     
     await db.execute(
-         """INSERT INTO encounter_monster (encounter_id, name, hp)
-                VALUES (?, ?, ?)""",
-         [eid, name, hp],
+         """INSERT INTO encounter_monster (encounter_id, name, hp, size)
+                VALUES (?, ?, ?, ?)""",
+         [eid, name, hp, size],
     )
     await db.commit()
 
@@ -283,4 +291,10 @@ async def deleteCharacterByName(name):
 async def deleteMonster(mid):
     db = await get_db()
     await db.execute("DELETE FROM encounter_monster WHERE id == '{}'".format(mid))
+    await db.commit()
+
+async def deleteEncounter(eid):
+    db = await get_db()
+    await db.execute("DELETE FROM encounters WHERE id == '{}'".format(eid))
+    await db.execute("DELETE FROM encounter_monster WHERE encounter_id == '{}'".format(eid))
     await db.commit()

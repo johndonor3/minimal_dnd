@@ -14,10 +14,35 @@
     enc_chars = {{characters | tojson}}
     enc_monsters = {{monsters | tojson}}
 
-    function addMonster(name, hp){
+    function convertSize(size) {
+        // relative to 5ft gridsize
+        if (size.toLowerCase() == "tiny") {
+            return 0.5
+        }
+        else if (size.toLowerCase() == "large") {
+            return 2
+        }
+        else if (size.toLowerCase() == "huge") {
+            return 3
+        }
+        else if (size.toLowerCase() == "gargantuan") {
+            return 4
+        }
+        // either small or medium
+        else {
+            return 1
+        }
+    }
+
+    function addMonster(name, mon){
+
+        let hp = mon.hit_points;
+        let size = convertSize(mon.size);
 
         if (!Number.isInteger(hp)) {
-            hp = addManualMonster(name)    
+            let manual = addManualMonster(name);
+            hp = manual[0];
+            size = manual[1];
         }
 
         if(hp === null){
@@ -38,6 +63,12 @@
         hiddenField4.name = "monster_hp";
         hiddenField4.value = hp;
         form2.appendChild(hiddenField4);
+
+        const hiddenField5 = document.createElement('input');
+        hiddenField5.type = 'hidden';
+        hiddenField5.name = "monster_size";
+        hiddenField5.value = size;
+        form2.appendChild(hiddenField5);
         
         document.body.appendChild(form2);
         form2.submit();
@@ -46,13 +77,14 @@
     function addManualMonster(name){
         let hp = prompt(name + " doesn't exist; enter hp to add manually or nothing to cancel");
         if(hp === null){
-          return null;
+          return null, null;
         }
         else if(Number.isNaN(parseInt(hp))){
-          return null;
+          return null, null;
         }
         else{
-          return parseInt(hp);
+            let size = prompt("please enter size (Tiny/Medium/Large/Huge/Gargantuan)");
+          return [parseInt(hp), convertSize(size)];
         }
     }
 
@@ -60,7 +92,7 @@
         return fetch('http://localhost:3000/api/monsters' + '/' + name)
         .then((response) => response.json())
         .then((mon) => {
-            addMonster(name, mon.hit_points);
+            addMonster(name, mon);
             drawTab(mon);
        })
        .catch((error) => {
@@ -74,6 +106,7 @@
     }
 </script>
 
+<h3><a href="/combat/{{encounter_name}}.html">Go To Map</a></h3>
 <div class="flexbox-container">
     <div class="flexbox-item encounter-characters">
         <div class="combat-name-hp-init" id="encounter-characters">

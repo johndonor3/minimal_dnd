@@ -34,6 +34,7 @@ async def addItem(cid, form):
         count = int(form["count"])
     except:
         await flash("there was a problem with your item!")
+        return None
     await db.addItem(cid, form["item"], weight, form["description"],
                      weapon=weapon, damage=damage, count=count)
 

@@ -18,7 +18,11 @@ async def encounters():
 
     if "encounter" in form:
         new_name = form["encounter"]
-        await db.addEncounter(new_name)
+        await db.addEncounter(new_name, "forest_map.jpg")
+
+    if "removeID" in form:
+        eid = form["removeID"]
+        await db.deleteEncounter(eid)
 
     encounters = await db.getEncounters()
 

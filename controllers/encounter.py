@@ -35,7 +35,8 @@ async def encounter(name):
     if "monster_name" in form:
         name = form["monster_name"]
         hp = form["monster_hp"]
-        await db.addMonsterToEncounter(eid, name, hp)
+        size = form["monster_size"]
+        await db.addMonsterToEncounter(eid, name, hp, size)
 
     if "hp_delta" in form:
         mid = int(form["monster_id"])
@@ -62,4 +63,5 @@ async def encounter(name):
     template_dict = getTemplateDictBase()
     template_dict.update({"characters": characters})
     template_dict.update({"monsters": monsters})
+    template_dict.update({"encounter_name": encounter["title"]})
     return await render_template("encounter.html", **template_dict)

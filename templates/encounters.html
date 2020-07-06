@@ -7,11 +7,32 @@
 
 {% block body %}
 
+<script type="text/javascript">
+    function removeEncounter(id){
+
+        var form = document.createElement('form');
+        form.method = "post";
+        form.action = "/encounters.html";
+
+        var hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = "removeID";
+        hiddenField.value = id;
+        form.appendChild(hiddenField);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+</script>
+
+
 <div class=well>
     <div class=row>
         <div align=center><h1>Saved Encounters</h1></div>
         {% for c in encounters %}
-        <a href="{{ '/encounter/%s.html'%c.title }}">{{c.title}} <br></a>
+        <p><button onClick=removeEncounter({{c.id}})>x</button> 
+           <a href="{{ '/encounter/%s.html'%c.title }}">{{c.title}}</a></p>
         {% endfor %}
     </div>
 </div>

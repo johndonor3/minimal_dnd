@@ -11,16 +11,51 @@
 <script type="text/javascript">
     enc_chars = {{characters | tojson}}
     enc_monsters = {{monsters | tojson}}
+    var current_map = "{{map}}";
+
+    function changeMap(name){
+
+        var form = document.createElement('form');
+        form.method = "post";
+        form.action = "/combat/".concat("{{encounter_name}}", ".html");
+
+
+        var hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = "map";
+        hiddenField.value = name;
+        form.appendChild(hiddenField);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+
 </script>
 
-<div>
-    <div>
-        <button type="button" onclick=resizeGrid(-5)>-</button>
-        <button type="button" onclick=resizeGrid(5)>+</button>
-        <h3>{{encounter_name}}</h3>
+<div class="flexbox-container">
+    <div class="flexbox-item combat-tools">
+        <h2>{{encounter_name}}</h2>
+        <div class="gradient"></div>
+        <div class="resize-buttons">
+            <button type="button" onclick=resizeGrid(-5)>-</button>
+            <button type="button" onclick=resizeGrid(5)>+</button>
+        </div>
+        
+        <div class="dropdown">
+          <button onclick="toggleDropDown()" class="dropbtn">Choose Map</button>
+          <div id="myDropdown" class="dropdown-content">
+              {% for m in mapList %}
+                <a onClick=changeMap("{{m}}")>{{ m }}</a>
+              {% endfor %}
+          </div>
+        </div>
     </div>
-    <canvas id='myCanvas' width="1000" height="1000"></canvas>
+
+    <div class="flexbox-item combat-map">
+        <canvas id='myCanvas' width="800" height="800"></canvas>
+    </div>
 </div>
+
 
 <script src="../static/js/combat.js"> </script>
 

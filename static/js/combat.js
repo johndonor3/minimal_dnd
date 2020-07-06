@@ -1,3 +1,22 @@
+function toggleDropDown() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+
+
 // borrowing ready-made code
 // https://riptutorial.com/html5-canvas/example/18918/dragging-circles---rectangles-around-the-canvas
 // cheers riptutorial!
@@ -32,34 +51,42 @@ window.onresize=function(e){ reOffset(); }
 canvas.onresize=function(e){ reOffset(); }
 
 
-function convertSize(size) {
-    // relative to 5ft gridsize
 
-    // damn right. either query api or add to db
-    // looks like it may be easier in db :/
-    if (size == "Tiny") {
-        return 0.5
-    }
-    else if (size == "Large") {
-        return 2
-    }
-    else if (size == "Huge") {
-        return 3
-    }
-    else if (size == "Gargantuan") {
-        return 4
-    }
-    // either small or medium
-    else {
-        return 1
-    }
-}
+
+// async function getMonsterSize(name) {
+//     var url = 'http://localhost:3000/api/monsters' + '/' + name;
+//     var res = await fetch(url);
+//     let monster = await res.json();
+    
+//     let size = convertSize(monster.size);
+//     return size;
+
+// }
+
+
 
 // save relevant information about shapes drawn on the canvas
 var shapes=[];
 var texts=[];
 
-function drawInit(){
+function snapToGrid(){
+    let circleOffset = 0;
+    shapes.forEach((shape, index) =>{
+        if (shape.radius) {
+            circleOffset = gridSize/2;
+        }
+        else {
+            circleOffset = 0;
+        }
+        shape.x = gridSize*Math.floor(shape.x/gridSize) + circleOffset;
+        shape.y = gridSize*Math.floor(shape.y/gridSize) + circleOffset;
+        let fixT = texts[index];
+        fixT.x = shape.x;
+        fixT.y = shape.y;
+    })
+}
+
+async function drawInit(){
     shapes=[];
     texts=[];
     for(var i=0; i < enc_chars.length; i++){
@@ -86,13 +113,29 @@ function drawInit(){
 
     for(var i=0; i < enc_monsters.length; i++){
         let monster = enc_monsters[i];
-        var size = Math.floor(gridSize*convertSize(monster.size))
-        shapes.push( {x:2*i*size+gridSize, y:2*gridSize, width:size, height:size, color:'red'} );
-        texts.push( {x:2*i*size+gridSize*1.1, y:2.3*gridSize, text: monster.name[0] + " " + monster.id%100})
+        console.log(monster)
+        let rPlace = Math.random() - 0.1; // -0.1 for character row
+        let yPos = 2*gridSize + Math.floor(rPlace*ch);
+        rPlace = Math.random() - 0.1; // -0.1 for character row
+        let xPos = 2*gridSize + Math.floor(rPlace*cw);
+
+        if (xPos > cw) {
+            xPos = cw - 2*gridSize - monster.size;
+        }
+
+        if (yPos > ch) {
+            yPos = ch - 2*gridSize - monster.size;
+        }
+
+        shapes.push( {x:xPos, y:yPos, 
+                      width:monster.size*gridSize, height:monster.size*gridSize, 
+                      color:'red'} );
+        texts.push( {x:xPos, y:yPos,  
+                     text: monster.name[0] + " " + monster.id%100})
     }
 }
 
-drawInit()
+drawInit();
 // drag related vars
 var isDragging=false;
 var startX,startY;
@@ -101,6 +144,7 @@ var startX,startY;
 var selectedShapeIndex;
 
 // draw the shapes on the canvas
+snapToGrid();
 drawAll();
 
 // listen for mouse events
@@ -167,6 +211,7 @@ function handleMouseUp(e){
     e.stopPropagation();
     // the drag is over -- clear the isDragging flag
     isDragging=false;
+    snapToGrid();
 }
 
 function handleMouseOut(e){
@@ -177,6 +222,7 @@ function handleMouseOut(e){
     e.stopPropagation();
     // the drag is over -- clear the isDragging flag
     isDragging=false;
+    snapToGrid();
 }
 
 function handleMouseMove(e){
@@ -232,7 +278,7 @@ function drawGrid(ctx, cw, ch){
 // redraw all shapes in their current positions
 function drawAll(){
     var image = new Image();
-    image.src = "../static/images/forest_map.jpg";
+    image.src = "../static/images/"+current_map;
     
     image.onload = function () {
         ctx.drawImage(image,
@@ -242,6 +288,7 @@ function drawAll(){
         drawGrid(ctx, cw, ch)
         for(var i=0;i<shapes.length;i++){
             var shape=shapes[i];
+
             if(shape.radius){
                 // it's a circle
                 ctx.beginPath();
@@ -255,7 +302,6 @@ function drawAll(){
                 ctx.fillRect(shape.x,shape.y,shape.width,shape.height);
             }
             var txt = texts[i];
-            console.log(txt)
             ctx.font = "20px serif";
             ctx.fillStyle = "white";
             ctx.textAlign = "left";
