@@ -24,6 +24,12 @@ button {
     font-size:18px;
 }
 
+select, option {
+    background-color:#d6d6d6;
+    color:#191919;
+    font-size:18px;
+}
+
 .nav ul {
     margin: 0;
 }

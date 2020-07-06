@@ -38,6 +38,9 @@
         <div class="monster-info" id="lastMonster">
 
         </div>
+        <div>
+            <canvas id="smallCanvas"></canvas>
+        </div>
     </div>
     <div class="flexbox-item monster-pics">
         <form method=post enctype=multipart/form-data>
@@ -47,7 +50,7 @@
         </form>
         <button onclick=cacheSession()>Save Monsters</button>
         {% for m in monImages %}
-          <a onClick=setVisibleOff("{{m}}")><img src="/uploads/{{m}}" width="320px" id="{{m}}" style="display: none" > </a>
+          <a onClick=setVisibleOff("{{m}}")><img src="/uploads/{{m}}" width="320px" id="{{m}}" class="monster-image" style="display: none" > </a>
         {% endfor %}
     </div>
 
