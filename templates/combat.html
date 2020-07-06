@@ -8,6 +8,51 @@
 
 {% block body %}
 
+<div class="flexbox-container">
+    <div class="flexbox-item combat-tools">
+        <h2>{{encounter_name}}</h2>
+        <div class="gradient"></div>
+        <div class="resize-buttons">
+            <button type="button" onclick=resizeGrid(-5)>-</button>
+            <button type="button" onclick=resizeGrid(5)>+</button>
+        </div>
+        
+        <div class="dropdown">
+          <button onclick="toggleDropDown()" class="dropbtn">Choose Map</button>
+          <div id="myDropdown" class="dropdown-content">
+              {% for m in mapList %}
+                <a onClick=changeMap("{{m}}")>{{ m }}</a>
+              {% endfor %}
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <button onclick="toggleMonDropDown()" class="mondropbtn">Toggle Monsters</button>
+          <div id="monsterDropdown" class="dropdown-content-monster">
+              {% for m in monImages %}
+                <a onClick=setVisibleImg("{{m}}")>{{ m }}</a>
+              {% endfor %}
+          </div>
+        </div>
+
+    </div>
+    <div class="flexbox-item monster-pics">
+        <form method=post enctype=multipart/form-data>
+          <label for="img">Upload a monster image:</label>
+          <input type="file" id = "monImage" name="monImage" accept="image/*">
+          <input type="submit" value="Upload">
+        </form>
+        <button onclick=cacheSession()>Save Monsters</button>
+        {% for m in monImages %}
+          <a onClick=setVisibleOff("{{m}}")><img src="/uploads/{{m}}" width="320px" id="{{m}}" style="display: none" > </a>
+        {% endfor %}
+    </div>
+
+    <div class="flexbox-item combat-map">
+        <canvas id='myCanvas' width="800" height="800"></canvas>
+    </div>
+</div>
+
 <script type="text/javascript">
     enc_chars = {{characters | tojson}}
     enc_monsters = {{monsters | tojson}}
@@ -30,33 +75,60 @@
         form.submit();
     }
 
+    const visibleMonsters = [];
+
+    function setVisibleImg(m) {
+        var x = document.getElementById(m);
+        if (x.style.display === "none") {
+            x.style.display = "block";
+            var index = visibleMonsters.indexOf(m);
+            if (index > -1) {
+                return;
+            }
+            visibleMonsters.push(m);
+        } else {
+            x.style.display = "none";
+            var index = visibleMonsters.indexOf(m);
+            if (index > -1) {
+                visibleMonsters.splice(index, 1);
+            }
+        }
+    }
+
+    function setVisibleOff(m) {
+        var x = document.getElementById(m);
+        var index = visibleMonsters.indexOf(m);
+        if (index > -1) {
+            visibleMonsters.splice(index, 1);
+        }
+        if (x.style.display === "none") {
+            return ;
+        } else {
+            x.style.display = "none";
+        }
+    }
+
+    function cacheSession() {
+        window.localStorage.setItem('{{encounter_name}}'+'.monsters', visibleMonsters);
+    }
+
+    function showEverything() {
+        var cachedMonsters = window.localStorage.getItem('{{encounter_name}}'+'.monsters') || [];
+
+        let temp = cachedMonsters.split(",")
+        temp.forEach((t) =>{
+            visibleMonsters.push(t);
+        })
+        console.log("loading!!", visibleMonsters);
+        for (i = 0; i < visibleMonsters.length; i++) {
+          var mName = visibleMonsters[i];
+          setVisibleImg(mName);
+        }
+    }
+
+    showEverything();
 </script>
-
-<div class="flexbox-container">
-    <div class="flexbox-item combat-tools">
-        <h2>{{encounter_name}}</h2>
-        <div class="gradient"></div>
-        <div class="resize-buttons">
-            <button type="button" onclick=resizeGrid(-5)>-</button>
-            <button type="button" onclick=resizeGrid(5)>+</button>
-        </div>
-        
-        <div class="dropdown">
-          <button onclick="toggleDropDown()" class="dropbtn">Choose Map</button>
-          <div id="myDropdown" class="dropdown-content">
-              {% for m in mapList %}
-                <a onClick=changeMap("{{m}}")>{{ m }}</a>
-              {% endfor %}
-          </div>
-        </div>
-    </div>
-
-    <div class="flexbox-item combat-map">
-        <canvas id='myCanvas' width="800" height="800"></canvas>
-    </div>
-</div>
-
-
 <script src="../static/js/combat.js"> </script>
+
 
 {% endblock body %}

@@ -2,8 +2,23 @@ function toggleDropDown() {
   document.getElementById("myDropdown").classList.toggle("show");
 }
 
+function toggleMonDropDown() {
+  document.getElementById("monsterDropdown").classList.toggle("show");
+}
+
 // Close the dropdown if the user clicks outside of it
 window.onclick = function(event) {
+  if (!event.target.matches('.mondropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content-monster");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+
   if (!event.target.matches('.dropbtn')) {
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
@@ -16,6 +31,11 @@ window.onclick = function(event) {
   }
 }
 
+var dropdowns = document.getElementsByClassName("dropdown-content-monster");
+
+for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+  }
 
 // borrowing ready-made code
 // https://riptutorial.com/html5-canvas/example/18918/dragging-circles---rectangles-around-the-canvas
@@ -51,8 +71,6 @@ window.onresize=function(e){ reOffset(); }
 canvas.onresize=function(e){ reOffset(); }
 
 
-
-
 // async function getMonsterSize(name) {
 //     var url = 'http://localhost:3000/api/monsters' + '/' + name;
 //     var res = await fetch(url);
@@ -62,7 +80,6 @@ canvas.onresize=function(e){ reOffset(); }
 //     return size;
 
 // }
-
 
 
 // save relevant information about shapes drawn on the canvas
@@ -91,7 +108,7 @@ async function drawInit(){
     texts=[];
     for(var i=0; i < enc_chars.length; i++){
         let char = enc_chars[i];
-        var size = Math.floor(gridSize*0.5)
+        var size = Math.floor(gridSize*0.5);
         shapes.push( {x:i*size+gridSize/2, y:gridSize/2, radius:size, color:'blue'} );
         let assigned = false;
         let tried = 1;
@@ -113,7 +130,6 @@ async function drawInit(){
 
     for(var i=0; i < enc_monsters.length; i++){
         let monster = enc_monsters[i];
-        console.log(monster)
         let rPlace = Math.random() - 0.1; // -0.1 for character row
         let yPos = 2*gridSize + Math.floor(rPlace*ch);
         rPlace = Math.random() - 0.1; // -0.1 for character row

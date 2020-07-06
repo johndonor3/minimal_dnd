@@ -1,13 +1,22 @@
 #!/usr/bin/env/python 
 
+import os
+
 from pathlib import Path
 from sqlite3 import dbapi2 as sqlite3
 
 
-from quart import Quart, render_template
+from quart import Quart, render_template, send_from_directory
 
 app = Quart(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
+UPLOAD_FOLDER = os.path.expanduser("~") + "/.cache/minimalDnD"
+
+
+app.config.update({
+    "UPLOAD_FOLDER": UPLOAD_FOLDER
+    })
 
 app.config.update({
    'DATABASE': app.root_path / 'char.db',
@@ -34,6 +43,7 @@ from controllers.encounter import encounter_page
 from controllers.encounter_top import encounters_page
 from controllers.combat import combat_page
 from controllers.combatEnc import combatEnc_page
+from controllers.local import localSource
 
 app.register_blueprint(index_page)
 app.register_blueprint(character_page)
@@ -42,3 +52,4 @@ app.register_blueprint(encounter_page)
 app.register_blueprint(encounters_page)
 app.register_blueprint(combat_page)
 app.register_blueprint(combatEnc_page)
+app.register_blueprint(localSource)

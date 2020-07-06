@@ -9,12 +9,18 @@
 
 {% block body %}
 
+<script type="text/javascript">
+    {% if monsterName %}
+        checkMonster();
+    {% endif %}
+
+</script>
 
 <!-- Many thanks for source material:
     http://jsfiddle.net/basmith7/Z2sQK/ -->
 
 <div>
-    <p>Monster:<input type="text" id="monsterForm" name="monster">
+    <p>Monster:<input type="text" id="monsterForm" name="monster" value="{{monsterName}}">
                <input type="submit" onclick="checkMonster();" value="Add"></p>
 </div>
 

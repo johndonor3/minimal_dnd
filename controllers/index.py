@@ -2,7 +2,7 @@
 
 import os
 import yaml
-from quart import render_template, Blueprint, g, request, flash
+from quart import render_template, Blueprint, request, flash, current_app
 
 from . import getTemplateDictBase
 import dbTools as db
@@ -23,7 +23,12 @@ async def index():
         files = await request.files
         if 'char' in files:
             file = files['char']
-            fullName = os.path.join("/var/www/dnd/", file.filename)
+            cachedir = current_app.config["UPLOAD_FOLDER"]
+            try:
+                os.makedirs(cachedir)
+            except:
+                pass
+            fullName = os.path.join(cachedir, file.filename)
             try:
                 file.save(fullName)
                 loadNew = True
