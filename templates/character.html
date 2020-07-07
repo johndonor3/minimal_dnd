@@ -147,7 +147,7 @@
                 <td align="center"><b>AC</b></th>
                 <td align="center"><b>HP</b></th>
                 <td align="center">
-                    <button type="button" value="hp_p">+</button>
+                    <button type="button" value="hp_p" class="btn">+</button>
                 </th>
                 <td align="center"><b>Initiative</b></th>
                 <td align="center"><b>Speed</b></th>
@@ -158,7 +158,7 @@
                 <td align="center"><b>{{char["ac"]}}</b></td>
                 <td align="center"><b>{{char["hp"]}}</b></td>
                     <td align="center">
-                    <button type="button" value="hp_m">-</button>
+                    <button type="button" value="hp_m" class="btn">-</button>
                 </th>
                 <td align="center"><b>{{char["iniative"]}}</b></td>
                 <td align="center"><b>{{char["speed"]}}</b></td>
@@ -176,14 +176,14 @@
         <div class="form">
             <div>
                 <form action="{{ '/character/%s.html'%char["name"] }}" method="post" class="create-post">
-                <p>Note Title:<input type="text" name="title"></p>
-                <p>Text:<textarea name="text" rows="5" style="color:#191919;"></textarea></p>
-                <p><input type="submit" value="Post"></p>
+                <p>Note Title:<input type="text" name="title" class="input-field"></p>
+                <p>Text:<textarea name="text" rows="5" class="input-field"></textarea></p>
+                <p><input type="submit" value="Post" class="btn"></p>
                 </form>
             </div>
             <div>
-                <p>Item:<input type="text" id="itemForm" name="item">
-                    <input type="submit" onclick="checkItem();" value="Add"></p>
+                <p>Item:<input type="text" id="itemForm" name="item" class="input-field">
+                    <input type="submit" onclick="checkItem();" value="Add" class="btn"></p>
             </div>
         </div>
     

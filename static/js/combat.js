@@ -186,14 +186,18 @@ function populateLatest() {
 
     let nameDiv = document.createElement("DIV");
     let nameForm = document.createElement("INPUT");
+    nameForm.className="input-field";
 
     nameForm.setAttribute("type", "text");
     nameForm.setAttribute("size", 5);
     nameForm.setAttribute("value", thisText.text);
 
     let nameBtn = document.createElement("BUTTON"); // Create Button
+    nameBtn.className="btn";
+    
 
     nameBtn.textContent = "rename";
+    nameBtn.className="btn";
 
     nameBtn.onclick = function() {
         thisText.text = nameForm.value;
@@ -207,14 +211,17 @@ function populateLatest() {
     if (currentShape.radius) {
         let radiusDiv = document.createElement("DIV");
         let radiusForm = document.createElement("INPUT");
+        radiusForm.className="input-field";
 
         radiusForm.setAttribute("type", "text");
         radiusForm.setAttribute("size", 5);
         radiusForm.setAttribute("value", currentShape.radius);
 
         let wBtn = document.createElement("BUTTON"); // Create Button
+        wBtn.className="btn";
 
         wBtn.textContent = "Update radius";
+        wBtn.className="btn";
 
         wBtn.onclick = function() {
             currentShape.radius = radiusForm.value;
@@ -228,14 +235,17 @@ function populateLatest() {
     else {
         let widthDiv = document.createElement("DIV");
         let widthForm = document.createElement("INPUT");
+        widthForm.className="input-field";
 
         widthForm.setAttribute("type", "text");
         widthForm.setAttribute("size", 5);
         widthForm.setAttribute("value", currentShape.width);
 
         let wBtn = document.createElement("BUTTON"); // Create Button
+        wBtn.className="btn";
 
         wBtn.textContent = "Update width";
+        wBtn.className="btn";
 
         wBtn.onclick = function() {
             currentShape.width = widthForm.value;
@@ -248,12 +258,14 @@ function populateLatest() {
 
         let heightDiv = document.createElement("DIV");
         let heightForm = document.createElement("INPUT");
+        heightForm.className="input-field";
 
         heightForm.setAttribute("type", "text");
         heightForm.setAttribute("size", 5);
         heightForm.setAttribute("value", currentShape.height);
 
         let hBtn = document.createElement("BUTTON"); // Create Button
+        hBtn.className="btn";
 
         hBtn.textContent = "Update height";
 
@@ -296,10 +308,12 @@ function populateLatest() {
     dropDiv.appendChild(label).appendChild(select);
 
     let dropBtn = document.createElement("BUTTON");
+    dropBtn.className="btn";
 
     let imgTools = document.createElement("DIV");
     let plus = document.createElement("BUTTON");
     plus.textContent = "+";
+    plus.className="btn";
     plus.onclick = function() {
         monThumb.size = monThumb.size + gridSize/2;
         var image = new Image();
@@ -311,6 +325,7 @@ function populateLatest() {
     }
     let minus = document.createElement("BUTTON");
     minus.textContent = "-";
+    minus.className="btn";
     minus.onclick = function() {
         monThumb.size = monThumb.size - gridSize/2;
         var image = new Image();
@@ -323,6 +338,7 @@ function populateLatest() {
 
     let right = document.createElement("BUTTON");
     right.innerHTML = "&#x2192;";
+    right.className="btn";
     right.onclick = function() {
         monThumb.x = monThumb.x + gridSize/2;
         var image = new Image();
@@ -335,6 +351,7 @@ function populateLatest() {
 
     let left = document.createElement("BUTTON");
     left.innerHTML = "&#8592;";
+    left.className="btn";
     left.onclick = function() {
         monThumb.x = monThumb.x - gridSize/2;
         var image = new Image();
@@ -347,6 +364,7 @@ function populateLatest() {
 
     let up = document.createElement("BUTTON");
     up.innerHTML = "&#x2191;";
+    up.className="btn";
     up.onclick = function() {
         monThumb.y = monThumb.y - gridSize/2;
         var image = new Image();
@@ -359,6 +377,7 @@ function populateLatest() {
 
     let down = document.createElement("BUTTON");
     down.innerHTML = "&#8595;";
+    down.className="btn";
     down.onclick = function() {
         monThumb.y = monThumb.y + gridSize/2;
         var image = new Image();
@@ -371,6 +390,7 @@ function populateLatest() {
 
     let bind = document.createElement("BUTTON");
     bind.textContent = "useThumb";
+    bind.className="btn";
     bind.onclick = function() {
         currentShape.sx = monThumb.x;
         currentShape.sy = monThumb.y;

@@ -12,23 +12,35 @@ html, body {
 
 input {
     color:#191919;
+    font-size:18px;
 }
 
 textarea {
     color:#000000;
 }
 
-button {
-    background-color:#d6d6d6;
-    color:#191919;
+.btn {
+    background-color:#9F3C33;
+    color:#FFFFFF;
     font-size:18px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.2em;
+    cursor: pointer;
+    min-width: 1.5em;
+    border: 1px solid black;
+    border-radius: 0.5em;
 }
 
-select, option {
-    background-color:#d6d6d6;
-    color:#191919;
-    font-size:18px;
+.btn:hover, .btn:focus {
+  background-color: #2980B9;
 }
+
+.input-field {
+  
+}
+
+
 
 .nav ul {
     margin: 0;
@@ -206,32 +218,6 @@ span.charName {
     flex-shrink: 0;
     align-items: center;
     width: 320px;
-}
-
-.dropbtn {
-  background-color: #3498DB;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-.dropbtn:hover, .dropbtn:focus {
-  background-color: #2980B9;
-}
-
-.mondropbtn {
-  background-color: #3498DB;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-.mondropbtn:hover, .mondropbtn:focus {
-  background-color: #2980B9;
 }
 
 .dropdown {

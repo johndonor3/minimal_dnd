@@ -13,12 +13,12 @@
         <h2>{{encounter_name}}</h2>
         <div class="gradient"></div>
         <div class="resize-buttons">
-            <button type="button" onclick=resizeGrid(-5)>-</button>
-            <button type="button" onclick=resizeGrid(5)>+</button>
+            <button type="button" onclick=resizeGrid(-5) class="btn">-</button>
+            <button type="button" onclick=resizeGrid(5) class="btn">+</button>
         </div>
         
         <div class="dropdown">
-          <button onclick="toggleDropDown()" class="dropbtn">Choose Map</button>
+          <button onclick="toggleDropDown()" class="btn dropbtn">Choose Map</button>
           <div id="myDropdown" class="dropdown-content">
               {% for m in mapList %}
                 <a onClick=changeMap("{{m}}")>{{ m }}</a>
@@ -27,7 +27,7 @@
         </div>
 
         <div class="dropdown">
-          <button onclick="toggleMonDropDown()" class="mondropbtn">Toggle Monsters</button>
+          <button onclick="toggleMonDropDown()" class="btn mondropbtn">Toggle Monsters</button>
           <div id="monsterDropdown" class="dropdown-content-monster">
               {% for m in monImages %}
                 <a onClick=setVisibleImg("{{m}}")>{{ m }}</a>
@@ -45,10 +45,10 @@
     <div class="flexbox-item monster-pics">
         <form method=post enctype=multipart/form-data>
           <label for="img">Upload a monster image:</label>
-          <input type="file" id = "monImage" name="monImage" accept="image/*">
-          <input type="submit" value="Upload">
+          <input type="file" id = "monImage" name="monImage" accept="image/*" class="input-field">
+          <input type="submit" value="Upload" class="btn">
         </form>
-        <button onclick=cacheSession()>Save Monsters</button>
+        <button onclick=cacheSession() class="btn">Save Monsters</button>
         {% for m in monImages %}
           <a onClick=setVisibleOff("{{m}}")><img src="/uploads/{{m}}" width="320px" id="{{m}}" class="monster-image" style="display: none" > </a>
         {% endfor %}

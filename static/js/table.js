@@ -54,7 +54,6 @@ function updatePurse(nom, val){
     form.submit();
 }
 
-const buttonStyle = {color:"#191919",}
 
 class Coin extends React.Component {
   constructor(props) {
@@ -80,7 +79,7 @@ class Coin extends React.Component {
   render() {
     return (
       <p>
-        <button onClick={this.transaction.bind(this)} style={buttonStyle}>$</button>
+        <button onClick={this.transaction.bind(this)} className="btn">$</button>
         <b>  {this.state.nom}</b>: {this.state.val}
       </p>
 
