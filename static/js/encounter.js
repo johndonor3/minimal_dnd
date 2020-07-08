@@ -60,11 +60,11 @@ class EncChar extends React.Component {
     return (
       <div className="char-row">
           <p><span className="charName">{this.state.name}  </span>
-          <button onClick={() => updateHP(this.state.name, -1)}>-</button>
-          <strong> {this.state.hp} </strong>
-          <button onClick={() => updateHP(this.state.name, 1)}>+</button>
+          <button onClick={() => updateHP(this.state.name, -1)} className="btn char-row-item">-</button>
+          <strong className="char-row-item char-row-hp"> {this.state.hp} </strong>
+          <button onClick={() => updateHP(this.state.name, 1)} className="btn char-row-item">+</button>
           <span>   </span>
-          <input value={this.state.init} onChange={this.updateInit.bind(this)} />
+          <input value={this.state.init} onChange={this.updateInit.bind(this)} className="input-field char-row-item"/>
           </p>
       </div>
     );
@@ -145,15 +145,15 @@ class EncMonster extends React.Component {
     return (
       <div className="char-row">
           <p>
-          <span onClick={() => fetchEncMonster(this.state.name)} className="charName">
+          <span onClick={() => fetchEncMonster(this.state.name)} className="charName monster-name">
           {this.state.name}
-          <button onClick={() => removeMonster(this.state.id)}>x</button>
+          <button onClick={() => removeMonster(this.state.id)} className="btn">x</button>
           </span>
-          <button onClick={() => updateMonHP(this.state.id, -1)}>-</button>
-          <strong> {this.state.hp} </strong>
-          <button onClick={() => updateMonHP(this.state.id, 1)}>+</button>
+          <button onClick={() => updateMonHP(this.state.id, -1)} className="btn char-row-item">-</button>
+          <strong className="char-row-item char-row-hp"> {this.state.hp} </strong>
+          <button onClick={() => updateMonHP(this.state.id, 1)} className="btn char-row-item">+</button>
           <span>   </span>
-          <input value={this.state.init} onChange={this.updateInit.bind(this)} />
+          <input value={this.state.init} onChange={this.updateInit.bind(this)} className="input-field char-row-item"/>
           </p>
       </div>
     );

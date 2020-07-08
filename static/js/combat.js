@@ -66,17 +66,6 @@ window.onresize=function(e){ reOffset(); }
 canvas.onresize=function(e){ reOffset(); }
 
 
-// async function getMonsterSize(name) {
-//     var url = 'http://localhost:3000/api/monsters' + '/' + name;
-//     var res = await fetch(url);
-//     let monster = await res.json();
-    
-//     let size = convertSize(monster.size);
-//     return size;
-
-// }
-
-
 // save relevant information about shapes drawn on the canvas
 var shapes=[];
 var texts=[];
@@ -109,7 +98,9 @@ function drawInit(){
         let cachedShape = window.localStorage.getItem(char.name + '.thumb') || null;
 
         if (cachedShape) {
-            shapes.push(JSON.parse(cachedShape));
+            let shape = JSON.parse(cachedShape);
+            shape.radius = size;
+            shapes.push(shape);
         }
         else {
             shapes.push( {x:i*size+gridSize/2, y:gridSize/2, radius:size, color:'blue',
@@ -150,10 +141,11 @@ function drawInit(){
         }
 
         let cachedShape = window.localStorage.getItem(monster.name + '.thumb') || null;
-        console.log(monster.name, cachedShape)
         if (cachedShape) {
-            console.log(JSON.parse(cachedShape))
-            shapes.push(JSON.parse(cachedShape));
+            let shape = JSON.parse(cachedShape);
+            shape.width = monster.size*gridSize;
+            shape.height = monster.size*gridSize;
+            shapes.push(shape);
         }
         else {
             shapes.push( {x:xPos, y:yPos, 
@@ -281,8 +273,29 @@ function populateLatest() {
 
     var smallCanvas = document.getElementById('smallCanvas');
     smallCanvas.width = latestDiv.clientWidth*0.8;
-    smallCanvas.height = 200;
+    smallCanvas.height = latestDiv.clientWidth*0.8;
     var sctx = smallCanvas.getContext('2d');
+    if (currentShape.img){
+        var image = new Image();
+        image.src = "/uploads/"+currentShape.img;
+
+        image.onload = function () {
+            let w = image.width;
+            let h = image.height;
+            let ratio = w/h;
+            if (w > smallCanvas.width) {
+                w = smallCanvas.width;
+                h = w/ratio;
+            }
+            if (h > smallCanvas.height) {
+                h = smallCanvas.height;
+                w = h/ratio;
+            }
+
+            sctx.clearRect(0, 0, smallCanvas.width, smallCanvas.height);
+            sctx.drawImage(image, 0, 0, w, h);
+        }
+    }
 
     let dropDiv = document.createElement("DIV");
             
@@ -299,6 +312,9 @@ function populateLatest() {
         option.value = fname;
         option.text = fname;
         select.appendChild(option);
+        if (fname == currentShape.img){
+            select.selectedIndex = i;
+        }
     }
 
     var label = document.createElement("label");
@@ -312,7 +328,7 @@ function populateLatest() {
 
     let imgTools = document.createElement("DIV");
     let plus = document.createElement("BUTTON");
-    plus.textContent = "+";
+    plus.textContent = "-";
     plus.className="btn";
     plus.onclick = function() {
         monThumb.size = monThumb.size + gridSize/2;
@@ -324,7 +340,7 @@ function populateLatest() {
         }
     }
     let minus = document.createElement("BUTTON");
-    minus.textContent = "-";
+    minus.textContent = "+";
     minus.className="btn";
     minus.onclick = function() {
         monThumb.size = monThumb.size - gridSize/2;
@@ -337,7 +353,7 @@ function populateLatest() {
     }
 
     let right = document.createElement("BUTTON");
-    right.innerHTML = "&#x2192;";
+    right.innerHTML = "&#8592;";
     right.className="btn";
     right.onclick = function() {
         monThumb.x = monThumb.x + gridSize/2;
@@ -350,7 +366,7 @@ function populateLatest() {
     }
 
     let left = document.createElement("BUTTON");
-    left.innerHTML = "&#8592;";
+    left.innerHTML = "&#x2192;";
     left.className="btn";
     left.onclick = function() {
         monThumb.x = monThumb.x - gridSize/2;
@@ -363,7 +379,7 @@ function populateLatest() {
     }
 
     let up = document.createElement("BUTTON");
-    up.innerHTML = "&#x2191;";
+    up.innerHTML = "&#8595;";
     up.className="btn";
     up.onclick = function() {
         monThumb.y = monThumb.y - gridSize/2;
@@ -376,7 +392,7 @@ function populateLatest() {
     }
 
     let down = document.createElement("BUTTON");
-    down.innerHTML = "&#8595;";
+    down.innerHTML = "&#x2191;";
     down.className="btn";
     down.onclick = function() {
         monThumb.y = monThumb.y + gridSize/2;
@@ -408,11 +424,11 @@ function populateLatest() {
     imgTools.appendChild(down)
     imgTools.appendChild(left)
     imgTools.appendChild(right)
-    imgTools.appendChild(bind)
     latestDiv.appendChild(imgTools)
 
     dropBtn.textContent = "choose img";
     dropBtn.onclick = function() {
+        imgTools.appendChild(bind)
         var image = new Image();
         image.src = "/uploads/"+select.value;
         
@@ -423,24 +439,20 @@ function populateLatest() {
 
     dropDiv.appendChild(dropBtn);
     latestDiv.appendChild(dropDiv);
-
 }
-
 
 function handleThumnail (sctx, image, indx) {
     let currentShape = shapes[indx];
     let scale = currentShape.radius*2 || currentShape.width;
-    let sx = currentShape.sx || monThumb.x;
-    let sy = currentShape.sy || monThumb.y;
-    let sWidth = currentShape.sWidth || monThumb.size;
-    let sHeight = currentShape.sHeight || monThumb.size;
+    let sx = monThumb.x;
+    let sy = monThumb.y;
+    let sWidth = monThumb.size;
+    let sHeight = monThumb.size;
     let dx = 0;
     let dy = 0;
 
-    sctx.clearRect(0, 0, scale, scale)
+    sctx.clearRect(0, 0, smallCanvas.width, smallCanvas.height);
     sctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, scale, scale);
-
-
 }
 
 
@@ -576,17 +588,6 @@ function drawGrid(ctx, cw, ch){
     }
 }
 
-function createImage(x, y, w, h){
-  img = new Image();
-  console.log("Drawing", w, h);
-  img.addEventListener('load', function () {
-    ctx.drawImage(this, x, y, w, h);
-  });
-  // img.src = '/uploads/dragon_head_silhouette.svg';
-  img.src = '/uploads/stirge.jpeg';
-};
-
-
 // clear the canvas and 
 // redraw all shapes in their current positions
 function drawAll(){
@@ -620,12 +621,6 @@ function drawAll(){
                 thumb.addEventListener('load', function () {
                     ctx.drawImage(this, sx, sy, sWidth, sHeight, dx, dy, scale, scale);
                 });
-
-                // thumb.onload = function () {
-                //     console.log(shape.img)
-                //     console.log(sx, sy, sWidth, sHeight, dx, dy, scale, scale)
-                //     ctx.drawImage(thumb, sx, sy, sWidth, sHeight, dx, dy, scale, scale);
-                // }
             }
             else if(shape.radius){
                 // it's a circle
@@ -647,7 +642,5 @@ function drawAll(){
             ctx.textBaseline = "top";
             ctx.fillText(txt.text, txt.x, txt.y);
         }
-
-        // createImage(400, 400, gridSize, gridSize);
     }
 }

@@ -17,6 +17,12 @@ input {
 
 textarea {
     color:#000000;
+    font-size:18px;
+}
+
+select, option {
+  color:#191919;
+  font-size:18px;
 }
 
 .btn {
@@ -37,7 +43,7 @@ textarea {
 }
 
 .input-field {
-  
+
 }
 
 
@@ -173,6 +179,7 @@ table.center {
 .encounter-characters {
     flex-shrink: 0;
     flex-grow: 1;
+    border: none;
 }
 .monster-encounter-container {
     min-width: 600px;
@@ -180,10 +187,32 @@ table.center {
 }
 
 .char-row {
-   text-align: left;
+    text-align: left;
+    border-bottom: 2px solid #9F3C33;
+    border-top: 2px solid #9F3C33;
+    border-left: 2px solid #9F3C33;
+    border-right: 2px solid #9F3C33;
+    border-radius: 5px;
+    padding-bottom: 0.2em;
+    padding-top: 0.2em;
+    margin-bottom: 1em;
+}
+
+/*.char-row-item {
+  padding-right: 0.5em;
+}*/
+
+.char-row-hp {
+  display: inline-block;
+  width: 2.5em;
+  text-align: center;
 }
 
 
+/*.char-row:last-child {
+  border-bottom: none;
+}
+*/
 .char-row input {
     width: 5%;
 }
@@ -195,7 +224,7 @@ span.charName {
     width: 12em;
 }
 
-.charName:hover {
+.monster-name:hover {
     background-color: rgba(255, 255, 255, .3)
 }
 

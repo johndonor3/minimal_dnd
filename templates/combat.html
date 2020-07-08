@@ -27,13 +27,14 @@
         </div>
 
         <div class="dropdown">
-          <button onclick="toggleMonDropDown()" class="btn mondropbtn">Toggle Monsters</button>
+          <button onclick="toggleMonDropDown()" class="btn mondropbtn">Add Monster Pic</button>
           <div id="monsterDropdown" class="dropdown-content-monster">
               {% for m in monImages %}
                 <a onClick=setVisibleImg("{{m}}")>{{ m }}</a>
               {% endfor %}
           </div>
         </div>
+        <button onclick=cacheSession() class="btn">Save Monsters</button>
         <div class="gradient"></div>
         <div class="monster-info" id="lastMonster">
 
@@ -48,7 +49,6 @@
           <input type="file" id = "monImage" name="monImage" accept="image/*" class="input-field">
           <input type="submit" value="Upload" class="btn">
         </form>
-        <button onclick=cacheSession() class="btn">Save Monsters</button>
         {% for m in monImages %}
           <a onClick=setVisibleOff("{{m}}")><img src="/uploads/{{m}}" width="320px" id="{{m}}" class="monster-image" style="display: none" > </a>
         {% endfor %}
