@@ -625,8 +625,10 @@ function drawAll(){
             else if(shape.radius){
                 // it's a circle
                 ctx.beginPath();
+                // ctx.lineWidth = 0;
                 ctx.arc(shape.x,shape.y,shape.radius,0,Math.PI*2);
-                ctx.closePath();
+                // ctx.closePath();
+                ctx.lineWidth = 0;
                 ctx.fillStyle=shape.color;
                 ctx.fill();
             }

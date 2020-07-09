@@ -85,9 +85,15 @@ function monsterEntry(monster, useDiv) {
                     <MonsterAttack name={action.name} desc={action.desc}/>
                 ))}
 
-            <div className="monster actions legendary-actions">
-                
-            </div>
+            {monster.legendary_actions &&
+                <div className="monster legendary-actions">
+                    <div className="gradient"></div>
+                    <div className="legendary-actions red">Legendary Actions</div>
+                    {monster.legendary_actions.map(action => (
+                        <MonsterAttack name={action.name} desc={action.desc}/>
+                    ))}
+                </div>
+            }
 
         </div>
     )

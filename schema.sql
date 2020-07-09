@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS skills;
 CREATE TABLE skills (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    character_id INT NOT NULL,
+   acrobatics INT NOT NULL,
    animal_handling INT NOT NULL,
    arcana INT NOT NULL,
    athletics INT NOT NULL,
@@ -37,6 +38,8 @@ CREATE TABLE skills (
    nature INT NOT NULL,
    perception INT NOT NULL,
    performance INT NOT NULL,
+   persuasion INT NOT NULL,
+   religion INT NOT NULL,
    sleight_of_hand INT NOT NULL,
    stealth INT NOT NULL,
    survival INT NOT NULL
@@ -87,5 +90,6 @@ CREATE TABLE encounter_monster (
    encounter_id INT NOT NULL,
    name TEXT NOT NULL,
    size INT NOT NULL,
-   hp INT NOT NULL
+   hp INT NOT NULL,
+   useLocal BOOLEAN Not NULL
 );
