@@ -23,8 +23,44 @@ function abilMod (score){
     }
 }
 
+function parseSavingThrow (iterObj){
+    let outString = ""
+    iterObj.forEach(function(val, idx) {
+        let name = val.name.split(" ");
+        if (name.includes("Saving")) {
+            outString = outString + name[2] + " " + val.value + ", ";
+        }
+    })
+
+    // outString = outString.replace("_", " ")
+
+    return outString
+}
+
+function parseSkills (iterObj){
+    let outString = ""
+    iterObj.forEach(function(val, idx) {
+        let name = val.name.split(" ");
+
+        if (name.includes("Skill:")) {
+            if (val.value > 0) {
+            outString = outString + name[1] + "  +" + val.value + ", ";
+            }
+            else {
+            outString = outString + name[1] + " " + val.value + ", ";
+            }
+        }
+    })
+
+    // outString = outString.replace("_", " ")
+
+    return outString
+}
+
 function combJson (iterObj) {
+    // using jqurery because json/dict like object. . . 
     // iterate and combine json object to string
+    // n, val are "name" and "value" so this is somewhat limited a function
     let outString = ""
     jQuery.each(iterObj, function(n, val) {
                     outString = outString + n + " " + val + ", ";
@@ -38,6 +74,9 @@ function combJson (iterObj) {
 const monsterState = {divs: [], names: []}
 
 function monsterEntry(monster, useDiv) {
+    let saving = parseSavingThrow(monster.proficiencies);
+    let skills = parseSkills(monster.proficiencies);
+
     let MonsterAttack = props => <div className="attack">
 
     <span className="attackname">{props.name}. </span>
@@ -46,8 +85,13 @@ function monsterEntry(monster, useDiv) {
 
     let monsterTable = (
         <div className="monster">
-            <div className="name">{monster.name}</div>
-            <div className="description">{monster.size} {monster.type}, {monster.alignment}</div>
+            <div className="gradient"></div>
+            <div className="name">{monster.name} </div>
+            <div className="description">
+            {monster.size} {monster.type} 
+            {monster.subtype && <span> ({monster.subtype})</span>
+            }, {monster.alignment}
+            </div>
 
             <div className="gradient"></div>
 
@@ -70,12 +114,26 @@ function monsterEntry(monster, useDiv) {
             </table>
 
             <div className="gradient"></div>
+            
+            {saving.length > 0 && <div><span className="bold">Saving Throws: </span>
+                <span>{saving}</span></div>
+            }
+
+            {skills.length > 0 && <div><span className="bold">Skills: </span>
+                <span>{skills}</span></div>
+            }
 
             <div><span className="bold">Senses: </span>
                 <span>{combJson(monster.senses)}</span></div>
 
             <div><span className="bold">Languages: </span><span>{monster.languages}</span></div>
             <div><span className="bold">Challenge: </span><span>{monster.challenge_rating}</span></div>
+
+            <div className="gradient"></div>
+
+            {monster.special_abilities.map(action => (
+                    <MonsterAttack name={action.name} desc={action.desc}/>
+                ))}
 
             <div className="gradient"></div>
 
