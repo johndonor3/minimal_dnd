@@ -52,9 +52,9 @@ async def getAbilty(cid):
 async def getSkills(cid):
     db = await get_db()
     cur = await db.execute(
-    """SELECT animal_handling, arcana, athletics, deception, history,
-              insight, intimidation, investigation, medicine, nature,
-              perception, performance, sleight_of_hand, stealth, survival
+    """SELECT acrobatics, animal_handling, arcana, athletics, deception, history,
+              insight, intimidation, investigation, medicine, nature, perception, 
+              performance, persuasion, religion, sleight_of_hand, stealth, survival
           FROM skills
       WHERE character_id == '{}' """.format(cid),
     )
@@ -156,6 +156,7 @@ async def addCharacter(name="moron", base={}, abilities={}, skills={}, purse={})
     )
     await db.commit()
 
+    acrobatics = skills.get("acrobatics", -1)
     animal_handling = skills.get("animal_handling", -1)
     arcana = skills.get("arcana", -1)
     athletics = skills.get("athletics", -1)
@@ -168,18 +169,20 @@ async def addCharacter(name="moron", base={}, abilities={}, skills={}, purse={})
     nature = skills.get("nature", -1)
     perception = skills.get("perception", -1)
     performance = skills.get("performance", -1)
+    persuasion = skills.get("persuasion", -1)
+    religion = skills.get("religion", -1)
     sleight_of_hand = skills.get("sleight_of_hand", -1)
     stealth = skills.get("stealth", -1)
     survival = skills.get("survival", -1)
-    
+
     await db.execute(
-         """INSERT INTO skills (character_id, animal_handling, arcana, athletics, deception, history,
+         """INSERT INTO skills (character_id, acrobatics, animal_handling, arcana, athletics, deception, history,
                             insight, intimidation, investigation, medicine, nature,
-                            perception, performance, sleight_of_hand, stealth, survival) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-         [character_id, animal_handling, arcana, athletics, deception, history,
-          insight, intimidation, investigation, medicine, nature,
-          perception, performance, sleight_of_hand, stealth, survival],
+                            perception, performance, persuasion, religion, sleight_of_hand, stealth, survival)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+         [character_id, acrobatics, animal_handling, arcana, athletics, deception, history,
+          insight, intimidation, investigation, medicine, nature, perception, performance,
+          persuasion, religion, sleight_of_hand, stealth, survival],
     )
     await db.commit()
 

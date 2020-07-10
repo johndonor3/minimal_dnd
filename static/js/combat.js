@@ -169,10 +169,12 @@ var selectedShapeIndex;
 const monThumb = {size: 300, x: 0, y:0};
 
 function populateLatest() {
+
     // populate latest selection div
     let thisIndex = selectedShapeIndex;
     let currentShape = shapes[selectedShapeIndex];
     let thisText = texts[selectedShapeIndex];
+
     let latestDiv = document.getElementById("lastMonster");
     latestDiv.innerHTML = "<h2>Details for " + thisText.text + "</h2>";
 
