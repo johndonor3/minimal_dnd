@@ -69,14 +69,17 @@ async def encounter(name):
     if "monster_name" in form:
         name = form["monster_name"]
         hp = form["monster_hp"]
-        size = convertSize(form["monster_size"])
-        await db.addMonsterToEncounter(eid, name, hp, size, False)
+        size = form["monster_size"]
+        local = form["local"] == "true"
+
+        await db.addMonsterToEncounter(eid, name, hp, size, local)
 
     if loadNew:
         cachedMon = json.loads(open(loadNew).read())
         name = cachedMon["index"]
         hp = cachedMon["hit_points"]
-        size = cachedMon["size"]
+        size = convertSize(cachedMon["size"])
+
         await db.addMonsterToEncounter(eid, name, hp, size, True)
 
     if "hp_delta" in form:

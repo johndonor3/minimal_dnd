@@ -34,7 +34,7 @@
         }
     }
 
-    function addMonster(mon){
+    function addMonster(mon, local=true){
 
         let hp = mon.hit_points;
         let size = convertSize(mon.size);
@@ -63,6 +63,12 @@
         hiddenField5.name = "monster_size";
         hiddenField5.value = size;
         form2.appendChild(hiddenField5);
+
+        const hiddenField232 = document.createElement('input');
+        hiddenField232.type = 'hidden';
+        hiddenField232.name = "local";
+        hiddenField232.value = local;
+        form2.appendChild(hiddenField232);
         
         document.body.appendChild(form2);
         form2.submit();
@@ -74,7 +80,7 @@
             localMonster(name, addMonster);
         }
         else {
-            addMonster(mon);
+            addMonster(mon, local=false);
         }
     }
 

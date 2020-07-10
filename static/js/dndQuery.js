@@ -25,6 +25,9 @@ function abilMod (score){
 
 function parseSavingThrow (iterObj){
     let outString = ""
+    if (!iterObj){
+        return outString;
+    }
     iterObj.forEach(function(val, idx) {
         let name = val.name.split(" ");
         if (name.includes("Saving")) {
@@ -39,6 +42,9 @@ function parseSavingThrow (iterObj){
 
 function parseSkills (iterObj){
     let outString = ""
+    if (!iterObj){
+        return outString;
+    }
     iterObj.forEach(function(val, idx) {
         let name = val.name.split(" ");
 
@@ -131,11 +137,12 @@ function monsterEntry(monster, useDiv) {
 
             <div className="gradient"></div>
 
-            {monster.special_abilities.map(action => (
+            {monster.special_abilities && monster.special_abilities.map(action => (
                     <MonsterAttack name={action.name} desc={action.desc}/>
-                ))}
+                ))
+            }
 
-            <div className="gradient"></div>
+            {monster.special_abilities && <div className="gradient"></div>}
 
             <div className="actions red">Actions</div>
 
