@@ -34,24 +34,13 @@
         }
     }
 
-    function addMonster(name, mon){
+    function addMonster(mon){
 
         let hp = mon.hit_points;
-        try {
-            let size = convertSize(mon.size);
-        }
-        catch {
-            let size = null;
-        }
+        let size = convertSize(mon.size);
 
-        if (!Number.isInteger(hp)) {
-            let manual = addManualMonster(name);
-            hp = manual[0];
-            size = manual[1];
-        }
-
-        if(hp === null){
-          return null;
+         if (!Number.isInteger(hp)) {
+            alert("Monster not found; try uploading json")
         }
 
         const form2 = document.createElement('form');
@@ -60,7 +49,7 @@
         const hiddenField3 = document.createElement('input');
         hiddenField3.type = 'hidden';
         hiddenField3.name = "monster_name";
-        hiddenField3.value = name;
+        hiddenField3.value = mon.index;
         form2.appendChild(hiddenField3);
 
         const hiddenField4 = document.createElement('input');
@@ -79,26 +68,35 @@
         form2.submit();
     }
 
-    function addManualMonster(name){
-        let hp = prompt(name + " doesn't exist; enter hp to add manually or nothing to cancel");
-        if(hp === null){
-          return null, null;
+    function allowLocalMonster(name, mon) {
+        let hp = mon.hit_points;
+        if (!Number.isInteger(hp)) {
+            localMonster(name, addMonster);
         }
-        else if(Number.isNaN(parseInt(hp))){
-          return null, null;
-        }
-        else{
-            let size = prompt("please enter size (Tiny/Medium/Large/Huge/Gargantuan)");
-          return [parseInt(hp), convertSize(size)];
+        else {
+            addMonster(mon);
         }
     }
+
+    // function addManualMonster(name){
+    //     let hp = prompt(name + " doesn't exist; enter hp to add manually or nothing to cancel");
+    //     if(hp === null){
+    //       return null, null;
+    //     }
+    //     else if(Number.isNaN(parseInt(hp))){
+    //       return null, null;
+    //     }
+    //     else{
+    //         let size = prompt("please enter size (Tiny/Medium/Large/Huge/Gargantuan)");
+    //       return [parseInt(hp), convertSize(size)];
+    //     }
+    // }
 
     function fetchMonster(name) {
         return fetch('http://localhost:3000/api/monsters' + '/' + name)
         .then((response) => response.json())
         .then((mon) => {
-            addMonster(name, mon);
-            drawTab(mon);
+            allowLocalMonster(name, mon);
        })
        .catch((error) => {
          console.log(error);
@@ -122,6 +120,11 @@
             <p>Add monster:<input type="text" id="addEncMonster" name="monster" class="input-field">
                     <input type="submit" onclick="checkEncMonster();" value="Add" class="btn"></p>
         </div>
+        <form method=post enctype=multipart/form-data>
+          <label for="img">Upload a monster (JSON):</label>
+          <input type="file" id ="localMonster" name="localMonster" accept="application/JSON" class="input-field">
+          <input type="submit" value="Upload" class="btn">
+        </form>
         <div class="combat-name-hp-init" id="encounter-monsters">
             
         </div>

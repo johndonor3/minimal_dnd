@@ -95,8 +95,26 @@ function drawTab(monster) {
     }
 }
 
-function fetchEncMonster(name) {
-    dndQuery("monsters", name, drawTab);
+function localMonster(name, targetFunc) {
+    var url = '/uploads/' + name + ".json";
+    return fetch(url)
+    .then((response) => response.json())
+    .then((mon) => {
+        targetFunc(mon);
+   })
+   .catch((error) => {
+     console.log(error);
+    });
+}
+
+
+function fetchEncMonster(name, local) {
+    if (local) {
+        localMonster(name, drawTab);
+    }
+    else {
+        dndQuery("monsters", name, drawTab);
+    }
 }
 
 function updateMonHP(mid, delta){
@@ -123,7 +141,7 @@ function updateMonHP(mid, delta){
 class EncMonster extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {name: props.name, hp: props.hp, id: props.id,
+    this.state = {name: props.name, hp: props.hp, id: props.id, local: props.local,
                   init: window.localStorage.getItem(props.id+'init') || ''};
   }
 
@@ -145,7 +163,7 @@ class EncMonster extends React.Component {
     return (
       <div className="char-row">
           <p>
-          <span onClick={() => fetchEncMonster(this.state.name)} className="charName monster-name">
+          <span onClick={() => fetchEncMonster(this.state.name, this.state.local)} className="charName monster-name">
           {this.state.name}
           <button onClick={() => removeMonster(this.state.id)} className="btn">x</button>
           </span>
@@ -163,7 +181,7 @@ class EncMonster extends React.Component {
 let monsterInfo = (
   <div className="monster-encounter-table">
       {enc_monsters.map( c => (
-          <EncMonster key={c.id} id={c.id} name={c.name} hp={c.hp}/>
+          <EncMonster key={c.id} id={c.id} name={c.name} hp={c.hp} local={c.local}/>
       ))}
   </div>
 )

@@ -260,13 +260,13 @@ async def updateEncounterMap(eid, mapName):
     )
     await db.commit()
 
-async def addMonsterToEncounter(eid, name, hp, size):
+async def addMonsterToEncounter(eid, name, hp, size, local):
     db = await get_db()
     
     await db.execute(
-         """INSERT INTO encounter_monster (encounter_id, name, hp, size)
-                VALUES (?, ?, ?, ?)""",
-         [eid, name, hp, size],
+         """INSERT INTO encounter_monster (encounter_id, name, hp, size, useLocal)
+                VALUES (?, ?, ?, ?, ?)""",
+         [eid, name, hp, size, local],
     )
     await db.commit()
 
