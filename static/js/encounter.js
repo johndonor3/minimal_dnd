@@ -1,3 +1,91 @@
+function convertSize(size) {
+    // relative to 5ft gridsize
+    if (size.toLowerCase() == "tiny") {
+        return 0.5
+    }
+    else if (size.toLowerCase() == "large") {
+        return 2
+    }
+    else if (size.toLowerCase() == "huge") {
+        return 3
+    }
+    else if (size.toLowerCase() == "gargantuan") {
+        return 4
+    }
+    // either small or medium
+    else {
+        return 1
+    }
+}
+
+function addMonster(mon, local=true){
+
+    let hp = mon.hit_points;
+    let size = convertSize(mon.size);
+
+     if (!Number.isInteger(hp)) {
+        alert("Monster not found; try uploading json")
+    }
+
+    const form2 = document.createElement('form');
+    form2.method = "post";
+
+    const hiddenField3 = document.createElement('input');
+    hiddenField3.type = 'hidden';
+    hiddenField3.name = "monster_name";
+    hiddenField3.value = mon.index;
+    form2.appendChild(hiddenField3);
+
+    const hiddenField4 = document.createElement('input');
+    hiddenField4.type = 'hidden';
+    hiddenField4.name = "monster_hp";
+    hiddenField4.value = hp;
+    form2.appendChild(hiddenField4);
+
+    const hiddenField5 = document.createElement('input');
+    hiddenField5.type = 'hidden';
+    hiddenField5.name = "monster_size";
+    hiddenField5.value = size;
+    form2.appendChild(hiddenField5);
+
+    const hiddenField232 = document.createElement('input');
+    hiddenField232.type = 'hidden';
+    hiddenField232.name = "local";
+    hiddenField232.value = local;
+    form2.appendChild(hiddenField232);
+
+    document.body.appendChild(form2);
+    form2.submit();
+}
+
+function allowLocalMonster(name, mon) {
+    let hp = mon.hit_points;
+    if (!Number.isInteger(hp)) {
+        localMonster(name, addMonster);
+    }
+    else {
+        addMonster(mon, false);
+    }
+}
+
+
+function fetchMonster(name) {
+    return fetch('http://localhost:3000/api/monsters' + '/' + name)
+    .then((response) => response.json())
+    .then((mon) => {
+        allowLocalMonster(name, mon);
+   })
+   .catch((error) => {
+     console.log("handled: ", error);
+    });
+}
+
+function checkEncMonster(){
+  let monster_name = document.getElementById("addEncMonster").value;
+  fetchMonster(monster_name);
+}
+
+
 function updateHP(name, hp){
 
     const form = document.createElement('form');
@@ -113,6 +201,7 @@ function localMonster(name, targetFunc) {
    })
    .catch((error) => {
      console.log(error);
+     alert("there was a problem with your monster!")
     });
 }
 

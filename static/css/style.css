@@ -13,6 +13,8 @@ html, body {
 input {
     color:#191919;
     font-size:18px;
+    border: 0px;
+    border-radius: 4px;
 }
 
 textarea {
@@ -34,7 +36,7 @@ select, option {
     padding: 0.2em;
     cursor: pointer;
     min-width: 1.5em;
-    border: 1px solid black;
+    border: 0px solid black;
     border-radius: 0.5em;
 }
 
@@ -175,12 +177,13 @@ table.center {
 /* encounter code below*/
 
 .encounter-characters {
+    min-width: 500px;
     flex-grow: 1;
     border: none;
 }
 .monster-encounter-container {
     min-width: 600px;
-    flex-grow: 6;
+    flex-grow: 3;
 }
 
 .char-row {
@@ -193,32 +196,32 @@ table.center {
     padding-bottom: 0.2em;
     padding-top: 0.2em;
     margin-bottom: 1em;
+    margin-right: 1em;
+
 }
 
-/*.char-row-item {
-  padding-right: 0.5em;
-}*/
+.char-row-item {
+  display: inline-block;
+  margin-left: 0.5em;
+}
 
-.char-row-hp {
+/*.char-row-hp {
   display: inline-block;
   width: 2.5em;
   text-align: center;
-}
+}*/
 
 
-/*.char-row:last-child {
-  border-bottom: none;
-}
-*/
 .char-row input {
-    width: 5%;
+    width: 8%;
+    max-width: 8%;
 }
 
 span.charName {
     font-weight:bold;
     font-size:120%;
     display: inline-block;
-    width: 12em;
+    width: 50%;
 }
 
 .monster-name:hover {
