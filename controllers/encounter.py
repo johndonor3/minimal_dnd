@@ -57,14 +57,11 @@ async def encounter(name):
                 await flash("there was a problem with your file!")
 
     if "hp" in form:
-        delta = int(form["hp"])
+        hp = int(form["hp"])
         name = form["name"]
 
-        dbChar = await db.getCharacter(name)
-        char = {k: dbChar[k] for k in dbChar.keys()}
-        curr = char["hp"]
         # update is expecting 2 lists!
-        await db.updateCharacter(name, ["hp"], [curr+delta])
+        await db.updateCharacter(name, ["hp"], [hp])
 
     if "monster_name" in form:
         name = form["monster_name"]
@@ -82,16 +79,11 @@ async def encounter(name):
 
         await db.addMonsterToEncounter(eid, name, hp, size, True)
 
-    if "hp_delta" in form:
+    if "new_hp" in form:
         mid = int(form["monster_id"])
-        delta = int(form["hp_delta"])
+        new_hp = int(form["new_hp"])
 
-        monsters = await db.getEncMonsters(eid)
-        monsters = [{"id": m["id"], "name": m["name"], "hp": m["hp"]} for m in monsters]
-
-        hp = [m for m in monsters if m["id"] == mid][0]["hp"]
-
-        await db.updateMonsterHP(mid, hp+delta)
+        await db.updateMonsterHP(mid, new_hp)
 
     if "remove_monster" in form:
         mid = int(form["remove_monster"])

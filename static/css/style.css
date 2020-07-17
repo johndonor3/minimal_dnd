@@ -46,8 +46,6 @@ select, option {
 
 }
 
-
-
 .nav ul {
     margin: 0;
 }
@@ -177,7 +175,6 @@ table.center {
 /* encounter code below*/
 
 .encounter-characters {
-    flex-shrink: 0;
     flex-grow: 1;
     border: none;
 }

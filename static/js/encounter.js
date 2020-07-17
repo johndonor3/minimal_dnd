@@ -1,4 +1,4 @@
-function updateHP(name, delta){
+function updateHP(name, hp){
 
     const form = document.createElement('form');
     form.method = "post";
@@ -7,7 +7,7 @@ function updateHP(name, delta){
     const hiddenField = document.createElement('input');
     hiddenField.type = 'hidden';
     hiddenField.name = "hp";
-    hiddenField.value = delta;
+    hiddenField.value = hp;
     form.appendChild(hiddenField);
 
     const hiddenField2 = document.createElement('input');
@@ -53,17 +53,26 @@ class EncChar extends React.Component {
     }
     else {
       this.setState({init: parsed});
-    }  
+    }
+  }
+
+  updateMyHP(event){
+    let parsed = parseInt(event.target.value);
+    if (isNaN(parsed)) {
+      this.setState({hp: event.target.value});
+    }
+    else {
+      this.setState({hp: parsed});
+    }
   }
 
   render() {
     return (
       <div className="char-row">
           <p><span className="charName">{this.state.name}  </span>
-          <button onClick={() => updateHP(this.state.name, -1)} className="btn char-row-item">-</button>
-          <strong className="char-row-item char-row-hp"> {this.state.hp} </strong>
-          <button onClick={() => updateHP(this.state.name, 1)} className="btn char-row-item">+</button>
-          <span>   </span>
+          <span>HP: </span>
+          <input value={this.state.hp} onChange={this.updateMyHP.bind(this)} className="input-field char-row-item"/>
+          <button onClick={() => updateHP(this.state.name, this.state.hp)} className="btn char-row-item">save</button>
           <input value={this.state.init} onChange={this.updateInit.bind(this)} className="input-field char-row-item"/>
           </p>
       </div>
@@ -117,15 +126,15 @@ function fetchEncMonster(name, local) {
     }
 }
 
-function updateMonHP(mid, delta){
+function updateMonHP(mid, hp){
 
     const form2 = document.createElement('form');
     form2.method = "post";
 
     const hiddenField3 = document.createElement('input');
     hiddenField3.type = 'hidden';
-    hiddenField3.name = "hp_delta";
-    hiddenField3.value = delta;
+    hiddenField3.name = "new_hp";
+    hiddenField3.value = hp;
     form2.appendChild(hiddenField3);
 
     const hiddenField4 = document.createElement('input');
@@ -159,6 +168,16 @@ class EncMonster extends React.Component {
     }  
   }
 
+  updateMyHP(event){
+    let parsed = parseInt(event.target.value);
+    if (isNaN(parsed)) {
+      this.setState({hp: event.target.value});
+    }
+    else {
+      this.setState({hp: parsed});
+    }  
+  }
+
   render() {
     return (
       <div className="char-row">
@@ -167,10 +186,9 @@ class EncMonster extends React.Component {
           {this.state.name}
           <button onClick={() => removeMonster(this.state.id)} className="btn">x</button>
           </span>
-          <button onClick={() => updateMonHP(this.state.id, -1)} className="btn char-row-item">-</button>
-          <strong className="char-row-item char-row-hp"> {this.state.hp} </strong>
-          <button onClick={() => updateMonHP(this.state.id, 1)} className="btn char-row-item">+</button>
-          <span>   </span>
+          <span>HP: </span>
+          <input value={this.state.hp} onChange={this.updateMyHP.bind(this)} className="input-field char-row-item"/>
+          <button onClick={() => updateMonHP(this.state.id, this.state.hp)} className="btn char-row-item">save</button>
           <input value={this.state.init} onChange={this.updateInit.bind(this)} className="input-field char-row-item"/>
           </p>
       </div>
