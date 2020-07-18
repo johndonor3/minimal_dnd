@@ -77,6 +77,17 @@ function combJson (iterObj) {
     return outString
 }
 
+function parseForName (iterObj) {
+    let outString = ""
+    if (!iterObj){
+        return outString;
+    }
+    iterObj.forEach(function(val, idx) {
+        outString = outString + val.name + ", ";
+    })
+    return outString
+}
+
 const monsterState = {divs: [], names: []}
 
 function monsterEntry(monster, useDiv) {
@@ -129,6 +140,22 @@ function monsterEntry(monster, useDiv) {
                 <span>{skills}</span></div>
             }
 
+            {monster.damage_vulnerabilities.length > 0 && <div><span className="bold">Damage Vulnerabilities: </span>
+                <span>{monster.damage_vulnerabilities.join(", ")}</span></div>
+            }
+
+            {monster.damage_resistances.length > 0 && <div><span className="bold">Damage Resistances: </span>
+                <span>{monster.damage_resistances.join(", ")}</span></div>
+            }
+
+            {monster.damage_immunities.length > 0 && <div><span className="bold">Damage Immunities: </span>
+                <span>{monster.damage_immunities.join(", ")}</span></div>
+            }
+
+            {monster.condition_immunities.length > 0 && <div><span className="bold">Condition Immunities: </span>
+                <span>{parseForName(monster.condition_immunities)}</span></div>
+            }
+
             <div><span className="bold">Senses: </span>
                 <span>{combJson(monster.senses)}</span></div>
 
@@ -153,8 +180,18 @@ function monsterEntry(monster, useDiv) {
             {monster.legendary_actions &&
                 <div className="monster legendary-actions">
                     <div className="gradient"></div>
-                    <div className="legendary-actions red">Legendary Actions</div>
+                    <div className="actions red">Legendary Actions</div>
                     {monster.legendary_actions.map(action => (
+                        <MonsterAttack name={action.name} desc={action.desc}/>
+                    ))}
+                </div>
+            }
+
+            {monster.reactions &&
+                <div className="monster legendary-actions">
+                    <div className="gradient"></div>
+                    <div className="actions red">Reactions</div>
+                    {monster.reactions.map(action => (
                         <MonsterAttack name={action.name} desc={action.desc}/>
                     ))}
                 </div>
