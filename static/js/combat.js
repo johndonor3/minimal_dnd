@@ -69,6 +69,17 @@ canvas.onresize=function(e){ reOffset(); }
 // save relevant information about shapes drawn on the canvas
 var shapes=[];
 var texts=[];
+var lastMoved = -1;
+
+function updateDbLoc(){
+    if (lastMoved == -1) {
+        return
+    }
+    else{
+        let moved = shapes[lastMoved];
+        locUpdate(moved.id, eid, moved.x, moved.y, moved.monster);
+    }
+}
 
 function snapToGrid(){
     let circleOffset = 0;
@@ -85,6 +96,7 @@ function snapToGrid(){
         fixT.x = shape.x;
         fixT.y = shape.y;
     })
+    updateDbLoc();
     drawAll();
 }
 
@@ -95,17 +107,19 @@ function drawInit(){
         let char = enc_chars[i];
         var size = Math.floor(gridSize*0.5);
 
-        let cachedShape = window.localStorage.getItem(char.name + '.thumb') || null;
+        // let cachedShape = window.localStorage.getItem(char.name + '.thumb') || null;
 
-        if (cachedShape) {
-            let shape = JSON.parse(cachedShape);
-            shape.radius = size;
-            shapes.push(shape);
-        }
-        else {
-            shapes.push( {x:i*size+gridSize/2, y:gridSize/2, radius:size, color:'blue',
-                      name: char.name} );
-        }
+        // if (cachedShape) {
+        //     let shape = JSON.parse(cachedShape);
+        //     shape.radius = size;
+        //     shapes.push(shape);
+        // }
+        // else {
+        //     shapes.push( {x:i*size+gridSize/2, y:gridSize/2, radius:size, color:'blue',
+        //               name: char.name} );
+        // }
+        shapes.push( {x:char.x, y:char.y, radius:size, color:'blue', name: char.name,
+                      id:char.id, monster:false,} );
 
         let assigned = false;
         let tried = 1;
@@ -119,7 +133,7 @@ function drawInit(){
                 assigned = true;
             }
             if (tried > char.name.length) {
-                texts.push({x:i*size+gridSize/3, y:gridSize/2, text: useName});
+                texts.push({x:char.x, y:char.y, text: useName});
                 assigned = true;
             }
         }
@@ -127,33 +141,39 @@ function drawInit(){
 
     for(var i=0; i < enc_monsters.length; i++){
         let monster = enc_monsters[i];
-        let rPlace = Math.random() - 0.1; // -0.1 for character row
-        let yPos = 2*gridSize + Math.floor(rPlace*ch);
-        rPlace = Math.random() - 0.1; // -0.1 for character row
-        let xPos = 2*gridSize + Math.floor(rPlace*cw);
+        // let rPlace = Math.random() - 0.1; // -0.1 for character row
+        // let yPos = 2*gridSize + Math.floor(rPlace*ch);
+        // rPlace = Math.random() - 0.1; // -0.1 for character row
+        // let xPos = 2*gridSize + Math.floor(rPlace*cw);
 
-        if (xPos > cw) {
-            xPos = cw - 2*gridSize - monster.size;
-        }
+        // if (xPos > cw) {
+        //     xPos = cw - 2*gridSize - monster.size;
+        // }
 
-        if (yPos > ch) {
-            yPos = ch - 2*gridSize - monster.size;
-        }
+        // if (yPos > ch) {
+        //     yPos = ch - 2*gridSize - monster.size;
+        // }
 
-        let cachedShape = window.localStorage.getItem(monster.name + '.thumb') || null;
-        if (cachedShape) {
-            let shape = JSON.parse(cachedShape);
-            shape.width = monster.size*gridSize;
-            shape.height = monster.size*gridSize;
-            shapes.push(shape);
-        }
-        else {
-            shapes.push( {x:xPos, y:yPos, 
+        // let cachedShape = window.localStorage.getItem(monster.name + '.thumb') || null;
+        // if (cachedShape) {
+        //     let shape = JSON.parse(cachedShape);
+        //     shape.width = monster.size*gridSize;
+        //     shape.height = monster.size*gridSize;
+        //     shapes.push(shape);
+        // }
+        // else {
+        //     shapes.push( {x:xPos, y:yPos, 
+        //               width:monster.size*gridSize, height:monster.size*gridSize, 
+        //               color:'red', name: monster.name} );
+        // }
+
+        // texts.push( {x:xPos, y:yPos,  
+                     // text: monster.name[0] + " " + monster.id%100})
+
+        shapes.push( {x:monster.x, y:monster.y, id:monster.id, monster:true,
                       width:monster.size*gridSize, height:monster.size*gridSize, 
                       color:'red', name: monster.name} );
-        }
-
-        texts.push( {x:xPos, y:yPos,  
+        texts.push( {x:monster.x, y:monster.y,  
                      text: monster.name[0] + " " + monster.id%100})
     }
 }
@@ -566,6 +586,8 @@ function handleMouseMove(e){
     // update the starting drag position (== the current mouse position)
     startX=mouseX;
     startY=mouseY;
+
+    lastMoved = selectedShapeIndex;
 }
 
 function drawGrid(ctx, cw, ch){
@@ -604,6 +626,7 @@ function drawAll(){
         drawGrid(ctx, cw, ch)
         for(var i=0;i<shapes.length;i++){
             var shape=shapes[i];
+            // window.localStorage.setItem(shape.name + '.thumb', JSON.stringify(shape));
 
             if(shape.img && !isDragging){
                 let thumb = new Image();

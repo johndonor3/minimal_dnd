@@ -94,6 +94,13 @@ function monsterEntry(monster, useDiv) {
     let saving = parseSavingThrow(monster.proficiencies);
     let skills = parseSkills(monster.proficiencies);
 
+    let style = {"columnCount": 2}
+
+    // if (useDiv.clientWidth < 800) {
+    //     style = {"columnCount": 1}
+    // }
+    
+
     let MonsterAttack = props => <div className="attack">
 
     <span className="attackname">{props.name}. </span>
@@ -101,7 +108,7 @@ function monsterEntry(monster, useDiv) {
     </div>
 
     let monsterTable = (
-        <div className="monster">
+        <div className="monster" style={style}>
             <div className="gradient"></div>
             <div className="name">{monster.name} </div>
             <div className="description">
@@ -113,7 +120,7 @@ function monsterEntry(monster, useDiv) {
             <div className="gradient"></div>
 
             <div className="red">
-                <div ><span className="bold red">Armor Class</span><span> {monster.armor_class} </span></div>
+                <div><span className="bold red">Armor Class</span><span> {monster.armor_class} </span></div>
                 <div><span className="bold red">Hit Points</span><span> {monster.hit_points} ({monster.hit_dice})</span></div>
                 <div><span className="bold red">Speed</span><span> {monster.speed.walk} </span></div>
             </div>

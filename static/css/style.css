@@ -182,7 +182,7 @@ table.center {
     border: none;
 }
 .monster-encounter-container {
-    min-width: 600px;
+    min-width: 500px;
     flex-grow: 3;
 }
 

@@ -5,6 +5,7 @@ import aiosqlite
 from quart import g
 from quart import current_app as app
 
+
 async def connect_db():
     engine = await aiosqlite.connect(app.config['DATABASE'])
     engine.row_factory = aiosqlite.Row
@@ -23,7 +24,7 @@ async def getCharacters():
     db = await get_db()
     cur = await db.execute(
     """SELECT *
-          FROM characters
+          FROM character
       ORDER BY id DESC""",
     )
     return await cur.fetchall()
@@ -33,7 +34,7 @@ async def getCharacter(name):
     db = await get_db()
     cur = await db.execute(
     """SELECT *
-          FROM characters
+          FROM character
       WHERE name == '{}' """.format(name),
     )
     return await cur.fetchone()
@@ -75,7 +76,7 @@ async def getNotes(cid):
     db = await get_db()
     cur = await db.execute(
     """SELECT *
-          FROM notes
+          FROM note
       WHERE character_id == '{}' """.format(cid),
     )
     return await cur.fetchall()
@@ -85,7 +86,7 @@ async def getItems(cid):
     db = await get_db()
     cur = await db.execute(
     """SELECT *
-          FROM items
+          FROM item
       WHERE character_id == '{}' """.format(cid),
     )
     return await cur.fetchall()
@@ -95,7 +96,7 @@ async def getEncounters():
     db = await get_db()
     cur = await db.execute(
     """SELECT *
-          FROM encounters
+          FROM encounter
       ORDER BY id DESC""",
     )
     return await cur.fetchall()
@@ -105,7 +106,7 @@ async def getEncounter(name):
     db = await get_db()
     cur = await db.execute(
     """SELECT *
-          FROM encounters
+          FROM encounter
       WHERE title == '{}' """.format(name),
     )
     return await cur.fetchone()
@@ -121,20 +122,31 @@ async def getEncMonsters(eid):
     return await cur.fetchall()
 
 
+async def getEncChars(eid):
+    db = await get_db()
+    cur = await db.execute(
+    """SELECT c.id, c.name, c.hp, c.img, l.x, l.y
+          FROM character AS c
+          JOIN location AS l ON c.id = l.character_id
+      WHERE l.encounter_id == '{}' """.format(eid),
+    )
+    return await cur.fetchall()
+
+
 async def addCharacter(name="moron", base={}, abilities={}, skills={}, purse={}):
     loaded = await getCharacters()
     names = [l["name"] for l in loaded]
     db = await get_db()
     if name in names:
-        await db.execute("DELETE FROM characters WHERE name == '{}'".format(name))
+        await db.execute("DELETE FROM character WHERE name == '{}'".format(name))
     iniative = base.get("iniative", 0)
     speed = base.get("speed", 30)
     proficiency = base.get("proficiency", 2)
     hp = base.get("hp", 10)
     ac = base.get("ac", 10)
-    
+
     await db.execute(
-         """INSERT INTO characters (name, hp, ac, iniative, speed, proficiency) 
+         """INSERT INTO character (name, hp, ac, iniative, speed, proficiency)
                 VALUES (?, ?, ?, ?, ?, ?)""",
          [name, hp, ac, iniative, speed, proficiency],
     )
@@ -149,8 +161,8 @@ async def addCharacter(name="moron", base={}, abilities={}, skills={}, purse={})
     wisdom = abilities.get("wisdom", 10)
     charisma = abilities.get("charisma", 10)
     await db.execute(
-         """INSERT INTO abilities (character_id, strength, dexterity, constitution, 
-                                   intelligence, wisdom, charisma) 
+         """INSERT INTO abilities (character_id, strength, dexterity, constitution,
+                                   intelligence, wisdom, charisma)
                 VALUES (?, ?, ?, ?, ?, ?, ?)""",
          [character_id, strength, dexterity, constitution, intelligence, wisdom, charisma],
     )
@@ -192,9 +204,9 @@ async def addCharacter(name="moron", base={}, abilities={}, skills={}, purse={})
     ep = purse.get("ep", 0)
     gp = purse.get("gp", 0)
     pp = purse.get("pp", 0)
-    cp, sp, ep, gp, pp 
+    cp, sp, ep, gp, pp
     await db.execute(
-         """INSERT INTO purse (character_id, cp, sp, ep, gp, pp) 
+         """INSERT INTO purse (character_id, cp, sp, ep, gp, pp)
                 VALUES (?, ?, ?, ?, ?, ?)""",
          [character_id, cp, sp, ep, gp, pp],
     )
@@ -209,7 +221,7 @@ async def updateCharacter(name, attr, value):
         update += " {a} = {v},".format(a=a, v=v)
     update = update[:-1]  # strip the last comma
     await db.execute(
-         "UPDATE characters {} WHERE name == '{}'".format(update, name),
+         "UPDATE character {} WHERE name == '{}'".format(update, name),
     )
     await db.commit()
 
@@ -225,79 +237,121 @@ async def updatePurse(cid, nom, val):
 
 async def addNote(cid, title, body):
     db = await get_db()
-    
+
     await db.execute(
-         """INSERT INTO notes (character_id, title, body) 
+         """INSERT INTO note (character_id, title, body)
                 VALUES (?, ?, ?)""",
          [cid, title, body],
     )
     await db.commit()
 
-async def addItem(cid, item, weight, description, weapon=False, 
-                    damage=None, count=1):
+
+async def addItem(cid, name, weight, description, weapon=False,
+                  damage=None, count=1):
     db = await get_db()
-    
+
     await db.execute(
-         """INSERT INTO items (character_id, item, weight, description, 
+         """INSERT INTO item (character_id, name, weight, description,
                                weapon, damage, count)
                 VALUES (?, ?, ?, ?, ?, ?, ?)""",
-         [cid, item, weight, description, weapon, damage, count],
+         [cid, name, weight, description, weapon, damage, count],
     )
     await db.commit()
 
+
 async def addEncounter(title, mapName):
     db = await get_db()
-    
+
     await db.execute(
-         """INSERT INTO encounters (title, useMap)
+         """INSERT INTO encounter (title, useMap)
                 VALUES (?, ?)""",
          [title, mapName],
     )
     await db.commit()
 
+    characters = await getCharacters()
+    encounter = await getEncounter(title)
+    eid = encounter["id"]
+    x = 0
+    for c in characters:
+        await db.execute(
+            """INSERT INTO location (encounter_id, character_id, x, y)
+                  VALUES (?, ?, ?, ?)""",
+            [eid, c["id"], x, 0]
+        )
+        await db.commit()
+        x += 20
+
+
 async def updateEncounterMap(eid, mapName):
     db = await get_db()
 
     await db.execute(
-         "UPDATE encounters SET useMap = '{v}' WHERE id == '{i}'".format(v=mapName, i=eid),
+         "UPDATE encounter SET useMap = '{v}' WHERE id == '{i}'".format(v=mapName, i=eid),
     )
     await db.commit()
+
 
 async def addMonsterToEncounter(eid, name, hp, size, local):
     db = await get_db()
-    
+
     await db.execute(
-         """INSERT INTO encounter_monster (encounter_id, name, hp, size, useLocal)
-                VALUES (?, ?, ?, ?, ?)""",
-         [eid, name, hp, size, local],
+         """INSERT INTO encounter_monster (encounter_id, name, hp, size, x, y, useLocal)
+                VALUES (?, ?, ?, ?, ?, ?, ?)""",
+         [eid, name, hp, size, 50, 50, local],
     )
     await db.commit()
+
+
+async def updateMonster(mid, attr, val):
+    if not type(val) == list:
+        attr = [attr]
+        val = [val]
+    assert len(attr) == len(val), "mis-matched update!"
+    db = await get_db()
+    update = "SET"
+    for a, v in zip(attr, val):
+        update += " {a} = {v},".format(a=a, v=v)
+    update = update[:-1]  # strip the last comma
+    await db.execute(
+         f"UPDATE encounter_monster {update} WHERE id == '{mid}'",
+    )
+    await db.commit()
+
 
 async def updateMonsterHP(mid, val):
-    db = await get_db()
+    await updateMonster(mid, "hp", val)
 
+
+async def updateCharLoc(cid, eid, x, y):
+    db = await get_db()
     await db.execute(
-         "UPDATE encounter_monster SET hp = {v} WHERE id == '{m}'".format(v=val, m=mid),
+         f"""UPDATE location SET x = {x}, y = {y}
+             WHERE encounter_id == '{eid}' AND character_id == '{cid}'""",
     )
     await db.commit()
+
 
 async def deleteCharacterByID(cid):
     db = await get_db()
-    await db.execute("DELETE FROM characters WHERE id == '{}'".format(cid))
+    await db.execute("DELETE FROM character WHERE id == '{}'".format(cid))
     await db.commit()
+
 
 async def deleteCharacterByName(name):
     db = await get_db()
-    await db.execute("DELETE FROM characters WHERE name == '{}'".format(name))
+    await db.execute("DELETE FROM character WHERE name == '{}'".format(name))
     await db.commit()
+
 
 async def deleteMonster(mid):
     db = await get_db()
     await db.execute("DELETE FROM encounter_monster WHERE id == '{}'".format(mid))
     await db.commit()
 
+
 async def deleteEncounter(eid):
     db = await get_db()
-    await db.execute("DELETE FROM encounters WHERE id == '{}'".format(eid))
+    await db.execute("DELETE FROM encounter WHERE id == '{}'".format(eid))
     await db.execute("DELETE FROM encounter_monster WHERE encounter_id == '{}'".format(eid))
     await db.commit()

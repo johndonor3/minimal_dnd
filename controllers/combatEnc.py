@@ -9,12 +9,14 @@ from quart import render_template, Blueprint, request, flash, current_app
 import dbTools as db
 from . import getTemplateDictBase
 
+
 def syncList():
     """sync call for os, ugh..."""
     dirName = os.path.abspath(__file__)
     parent = dirName.split("controllers")[0]
     maps = os.listdir(os.path.join(parent, "static/images"))
     return maps
+
 
 def listImages(path):
     """sync call for os, ugh..."""
@@ -24,6 +26,7 @@ def listImages(path):
 
 
 combatEnc_page = Blueprint("combatEnc", __name__)
+
 
 @combatEnc_page.route('/combat/<name>.html', methods=["GET", "POST"])
 async def combat(name):
@@ -65,12 +68,16 @@ async def combat(name):
     imgs = listImages(imgdir)
     imgs.sort()
 
+    chars = await db.getEncChars(eid)
+
     monsters = await db.getEncMonsters(eid)
     monsters = [{"id": m["id"], "name": m["name"], "hp": m["hp"],
-                 "size": m["size"]} for m in monsters]
+                 "local": m["useLocal"], "x": m["x"], "y": m["y"],
+                 "size": m["size"]}
+                for m in monsters]
 
-    characters = await db.getCharacters()
-    characters = [{"name": c["name"], "hp": c["hp"]} for c in characters]
+    characters = [{"id": c["id"], "name": c["name"], "hp": c["hp"],
+                   "x": c["x"], "y": c["y"], "img": c["img"]} for c in chars]
 
     maps = syncList()
 
@@ -82,5 +89,6 @@ async def combat(name):
     template.update({"map": useMap})
     template.update({"mapList": maps})
     template.update({"monImages": imgs})
+    template.update({"eid": eid})
 
     return await render_template("combat.html", **template)

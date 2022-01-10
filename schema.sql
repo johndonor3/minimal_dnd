@@ -1,12 +1,15 @@
-DROP TABLE IF EXISTS characters;
-CREATE TABLE characters (
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS character;
+CREATE TABLE character (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    name TEXT NOT NULL,
    hp INT NOT NULL,
    ac INT NOT NULL,
    iniative INT NOT NULL,
    speed INT NOT NULL,
-   proficiency INT NOT NULL
+   proficiency INT NOT NULL,
+   img TEXT
 );
 
 DROP TABLE IF EXISTS abilities;
@@ -18,7 +21,8 @@ CREATE TABLE abilities (
    constitution INT NOT NULL,
    intelligence INT NOT NULL,
    wisdom INT NOT NULL,
-   charisma INT NOT NULL
+   charisma INT NOT NULL,
+   FOREIGN KEY(character_id) REFERENCES character(id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS skills;
@@ -42,7 +46,8 @@ CREATE TABLE skills (
    religion INT NOT NULL,
    sleight_of_hand INT NOT NULL,
    stealth INT NOT NULL,
-   survival INT NOT NULL
+   survival INT NOT NULL,
+   FOREIGN KEY(character_id) REFERENCES character(id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS purse;
@@ -53,32 +58,34 @@ CREATE TABLE purse (
    sp INT NOT NULL,
    ep INT NOT NULL,
    gp INT NOT NULL,
-   pp INT NOT NULL
+   pp INT NOT NULL,
+   FOREIGN KEY(character_id) REFERENCES character(id) ON DELETE CASCADE
 );
 
-
-DROP TABLE IF EXISTS notes;
-CREATE TABLE notes (
+DROP TABLE IF EXISTS note;
+CREATE TABLE note (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    character_id INT NOT NULL,
    title TEXT NOT NULL,
-   body TEXT NOT NULL
+   body TEXT NOT NULL,
+   FOREIGN KEY(character_id) REFERENCES character(id) ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS items;
-CREATE TABLE items (
+DROP TABLE IF EXISTS item;
+CREATE TABLE item (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    character_id INT NOT NULL,
-   item TEXT NOT NULL,
+   name TEXT NOT NULL,
    weight REAL NOT NULL,
    description TEXT,
    weapon BOOLEAN NOT NULL,
    damage TEXT,
-   count INT NOT NULL
+   count INT NOT NULL,
+   FOREIGN KEY(character_id) REFERENCES character(id) ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS encounters;
-CREATE TABLE encounters (
+DROP TABLE IF EXISTS encounter;
+CREATE TABLE encounter (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    title TEXT NOT NULL,
    useMap TEXT NOT NULL
@@ -91,5 +98,19 @@ CREATE TABLE encounter_monster (
    name TEXT NOT NULL,
    size INT NOT NULL,
    hp INT NOT NULL,
-   useLocal BOOLEAN Not NULL
+   x INT NOT NULL,
+   y INT NOT NULL,
+   useLocal BOOLEAN Not NULL,
+   FOREIGN KEY(encounter_id) REFERENCES encounter(id) ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS location;
+CREATE TABLE location (
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   encounter_id INT NOT NULL,
+   character_id INT NOT NULL,
+   x INT NOT NULL,
+   y INT NOT NULL,
+   FOREIGN KEY(encounter_id) REFERENCES encounter(id) ON DELETE CASCADE,
+   FOREIGN KEY(character_id) REFERENCES character(id) ON DELETE CASCADE
 );

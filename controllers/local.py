@@ -1,12 +1,9 @@
-#!/usr/bin/env/python 
+#!/usr/bin/env/python
 
-from quart import render_template, Blueprint, request, send_from_directory, g, current_app
-
-import dbTools as db
-from . import getTemplateDictBase
-
+from quart import Blueprint, send_from_directory, current_app
 
 localSource = Blueprint("localSource", __name__)
+
 
 @localSource.route('/uploads/<filename>', methods=["GET", "POST"])
 async def local(filename):
