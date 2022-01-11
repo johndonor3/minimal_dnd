@@ -68,7 +68,6 @@ function allowLocalMonster(name, mon) {
     }
 }
 
-
 function fetchMonster(name) {
     return fetch('http://localhost:3000/api/monsters' + '/' + name)
     .then((response) => response.json())
@@ -83,29 +82,6 @@ function fetchMonster(name) {
 function checkEncMonster(){
   let monster_name = document.getElementById("addEncMonster").value;
   fetchMonster(monster_name);
-}
-
-
-function updateHP(name, hp){
-
-    const form = document.createElement('form');
-    form.method = "post";
-
-
-    const hiddenField = document.createElement('input');
-    hiddenField.type = 'hidden';
-    hiddenField.name = "hp";
-    hiddenField.value = hp;
-    form.appendChild(hiddenField);
-
-    const hiddenField2 = document.createElement('input');
-    hiddenField2.type = 'hidden';
-    hiddenField2.name = "name";
-    hiddenField2.value = name;
-    form.appendChild(hiddenField2);
-    
-    document.body.appendChild(form);
-    form.submit();
 }
 
 function removeMonster(mid){
@@ -126,7 +102,7 @@ function removeMonster(mid){
 class EncChar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {name: props.name, hp: props.hp, 
+    this.state = {name: props.name, hp: props.hp, cid: props.cid,
                   init: window.localStorage.getItem(props.name+'init') || ''};
   }
 
@@ -160,7 +136,7 @@ class EncChar extends React.Component {
           <p><span className="charName">{this.state.name}  </span>
           <span>HP: </span>
           <input value={this.state.hp} onChange={this.updateMyHP.bind(this)} className="input-field char-row-item"/>
-          <button onClick={() => updateHP(this.state.name, this.state.hp)} className="btn char-row-item">save</button>
+          <button onClick={() => charUpdate(this.state.cid, 'hp', this.state.hp)} className="btn char-row-item">save</button>
           <input value={this.state.init} onChange={this.updateInit.bind(this)} className="input-field char-row-item"/>
           </p>
       </div>
@@ -172,7 +148,7 @@ class EncChar extends React.Component {
 let charInfo = (
   <div className="char-encounter-table">
       {enc_chars.map( c => (
-          <EncChar key={c.name} name={c.name} hp={c.hp}/>
+          <EncChar key={c.name} cid={c.id} name={c.name} hp={c.hp}/>
       ))}
   </div>
 )
@@ -277,7 +253,7 @@ class EncMonster extends React.Component {
           </span>
           <span>HP: </span>
           <input value={this.state.hp} onChange={this.updateMyHP.bind(this)} className="input-field char-row-item"/>
-          <button onClick={() => updateMonHP(this.state.id, this.state.hp)} className="btn char-row-item">save</button>
+          <button onClick={() => monUpdate(this.state.id, 'hp', this.state.hp)} className="btn char-row-item">save</button>
           <input value={this.state.init} onChange={this.updateInit.bind(this)} className="input-field char-row-item"/>
           </p>
       </div>

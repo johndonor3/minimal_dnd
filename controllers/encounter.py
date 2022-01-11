@@ -58,10 +58,10 @@ async def encounter(name):
 
     if "hp" in form:
         hp = int(form["hp"])
-        name = form["name"]
+        cid = form["cid"]
 
         # update is expecting 2 lists!
-        await db.updateCharacter(name, ["hp"], [hp])
+        await db.updateCharacter(cid, ["hp"], [hp])
 
     if "monster_name" in form:
         name = form["monster_name"]
@@ -95,7 +95,7 @@ async def encounter(name):
     monsters = [{"id": m["id"], "name": m["name"], "hp": m["hp"],
                  "local": m["useLocal"]} for m in monsters]
 
-    characters = [{"name": c["name"], "hp": c["hp"]} for c in chars]
+    characters = [{"id": c["id"], "name": c["name"], "hp": c["hp"]} for c in chars]
 
     template_dict = getTemplateDictBase()
     template_dict.update({"characters": characters})

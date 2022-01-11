@@ -61,7 +61,7 @@ async def character(name):
         curr = char["hp"]
         delta = int(form["hp"])
         # update is expecting 2 lists!
-        await db.updateCharacter(name, ["hp"], [curr+delta])
+        await db.updateCharacter(char["id"], ["hp"], [curr+delta])
 
         # then pull again
         dbChar = await db.getCharacter(name)

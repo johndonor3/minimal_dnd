@@ -213,7 +213,7 @@ async def addCharacter(name="moron", base={}, abilities={}, skills={}, purse={})
     await db.commit()
 
 
-async def updateCharacter(name, attr, value):
+async def updateCharacter(cid, attr, value):
     assert len(attr) == len(value), "mis-matched update!"
     db = await get_db()
     update = "SET"
@@ -221,7 +221,7 @@ async def updateCharacter(name, attr, value):
         update += " {a} = {v},".format(a=a, v=v)
     update = update[:-1]  # strip the last comma
     await db.execute(
-         "UPDATE character {} WHERE name == '{}'".format(update, name),
+         "UPDATE character {} WHERE id == '{}'".format(update, cid),
     )
     await db.commit()
 

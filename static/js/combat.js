@@ -107,17 +107,6 @@ function drawInit(){
         let char = enc_chars[i];
         var size = Math.floor(gridSize*0.5);
 
-        // let cachedShape = window.localStorage.getItem(char.name + '.thumb') || null;
-
-        // if (cachedShape) {
-        //     let shape = JSON.parse(cachedShape);
-        //     shape.radius = size;
-        //     shapes.push(shape);
-        // }
-        // else {
-        //     shapes.push( {x:i*size+gridSize/2, y:gridSize/2, radius:size, color:'blue',
-        //               name: char.name} );
-        // }
         shapes.push( {x:char.x, y:char.y, radius:size, color:'blue', name: char.name,
                       id:char.id, monster:false,} );
 
@@ -141,35 +130,6 @@ function drawInit(){
 
     for(var i=0; i < enc_monsters.length; i++){
         let monster = enc_monsters[i];
-        // let rPlace = Math.random() - 0.1; // -0.1 for character row
-        // let yPos = 2*gridSize + Math.floor(rPlace*ch);
-        // rPlace = Math.random() - 0.1; // -0.1 for character row
-        // let xPos = 2*gridSize + Math.floor(rPlace*cw);
-
-        // if (xPos > cw) {
-        //     xPos = cw - 2*gridSize - monster.size;
-        // }
-
-        // if (yPos > ch) {
-        //     yPos = ch - 2*gridSize - monster.size;
-        // }
-
-        // let cachedShape = window.localStorage.getItem(monster.name + '.thumb') || null;
-        // if (cachedShape) {
-        //     let shape = JSON.parse(cachedShape);
-        //     shape.width = monster.size*gridSize;
-        //     shape.height = monster.size*gridSize;
-        //     shapes.push(shape);
-        // }
-        // else {
-        //     shapes.push( {x:xPos, y:yPos, 
-        //               width:monster.size*gridSize, height:monster.size*gridSize, 
-        //               color:'red', name: monster.name} );
-        // }
-
-        // texts.push( {x:xPos, y:yPos,  
-                     // text: monster.name[0] + " " + monster.id%100})
-
         shapes.push( {x:monster.x, y:monster.y, id:monster.id, monster:true,
                       width:monster.size*gridSize, height:monster.size*gridSize, 
                       color:'red', name: monster.name} );

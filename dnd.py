@@ -47,7 +47,7 @@ from controllers.encounter_top import encounters_page
 from controllers.combat import combat_page
 from controllers.combatEnc import combatEnc_page
 from controllers.local import localSource
-from controllers.dbEndPoints import locationUpdate
+from controllers.dbEndPoints import dbEndPoints
 
 app.register_blueprint(index_page)
 app.register_blueprint(character_page)
@@ -57,4 +57,4 @@ app.register_blueprint(encounters_page)
 app.register_blueprint(combat_page)
 app.register_blueprint(combatEnc_page)
 app.register_blueprint(localSource)
-app.register_blueprint(locationUpdate)
+app.register_blueprint(dbEndPoints)
