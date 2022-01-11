@@ -2,13 +2,14 @@
 {% set active_page = "char" %}
 {% block head %}
 
+ <link href="../static/css/bootstrap.min.css" rel="stylesheet">
 
 {% endblock head %}
 
 
 {% block body %}
 
-
+<script src="../static/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
 
@@ -109,111 +110,110 @@
 
 <!-- <h1 class="char-title">Character info for {{char.name}} </h1> -->
 
-<div class="flexbox-container">
-    <div class="flexbox-item skills">
-        <div class="table-cont abil-table" id="abil_table">
-            
-        </div>
-
-        <div class="table-cont skill-table">
-            <table>
-            {% for key in skills.keys() %}
-            <tr>
-            <td align="left"><b>{{key.replace("_", " ")}}</b></td>
-            <td align="right"><b>{{skills[key]}}</b></td>
-            </tr>
-            {% endfor %}
-            </table>
-        </div>
-
-        <div class="table-cont purse-table">
-            <div style="height:280px;" id="purse_table">
+<div class="container bg-transparent">
+    <div class="row gy-5">
+        <div class="col md-6">abils?</div>
+        <div class="col md-6">
+            <div class="card-group">
+                <div class="card bg-transparent text-center p-1" style="width: 4rem;">
+                    <div class="card-body border">
+                        <h6 class="card-title">AC</h5>
+                        <h2 class="card-text">{{char["ac"]}}</h2>
+                    </div>
+                </div>
+                <div class="card bg-transparent text-center p-1" style="width: 5rem;">
+                    <div class="card-body border">
+                        <h6 class="card-title">HP</h5>
+                        <h2 class="card-text">{{char["hp"]}}/34</h2>
+                    </div>
+                </div>
+                <div class="card bg-transparent text-center p-1" style="width: 7rem;">
+                    <div class="card-body border">
+                        <h6 class="card-title">Initiative</h5>
+                        <h2 class="card-text">+{{char["iniative"]}}</h2>
+                    </div>
+                </div>
+                <div class="card bg-transparent text-center p-1" style="width: 8rem;">
+                    <div class="card-body border">
+                        <h6 class="card-title">Proficiency</h5>
+                        <h2 class="card-text">{{char["proficiency"]}}</h2>
+                    </div>
+                </div>
             </div>
         </div>
-
-
     </div>
-    <div class="flexbox-item char-main">
-        <div class="table-cont char-table"> 
-            <table class="center" onclick="handleClick(event);" style="font-size:150%;">
-                <col width="40">
-                <col width="40">
-                <col width="20">
-                <col width="60">
-                <col width="60">
-                <col width="60">
-                <col width="100">
-                <tr>
-                <td align="center"><b>AC</b></th>
-                <td align="center"><b>HP</b></th>
-                <td align="center">
-                    <button type="button" value="hp_p" class="btn">+</button>
-                </th>
-                <td align="center"><b>Initiative</b></th>
-                <td align="center"><b>Speed</b></th>
-                <td align="center"><b>Proficiency</b></th>
-                <td align="center"><b>cap.</b> {{char["strength"]*15}} lbs</th>
-                </tr>
-                <tr>
-                <td align="center"><b>{{char["ac"]}}</b></td>
-                <td align="center"><b>{{char["hp"]}}</b></td>
-                    <td align="center">
-                    <button type="button" value="hp_m" class="btn">-</button>
-                </th>
-                <td align="center"><b>{{char["iniative"]}}</b></td>
-                <td align="center"><b>{{char["speed"]}}</b></td>
-                <td align="center"><b>{{char["proficiency"]}}</b></td>
-                <td align="center"><b>gear</b> {{char["gear_lbs"]}} lbs</td>
-                </tr>
-            </table>
-        </div>
-        <div class="table-cont notes"> 
-            {% for title in notes.keys() %}
-            <h4>{{title}}</h4>
-            <p>{{notes[title]}} </p>
-            {% endfor %}
-        </div>
-        <div class="form">
-            <div>
-                <form action="{{ '/character/%s.html'%char["name"] }}" method="post" class="create-post">
-                <p>Note Title:<input type="text" name="title" class="input-field"></p>
-                <p>Text:<textarea name="text" rows="5" class="input-field"></textarea></p>
-                <p><input type="submit" value="Post" class="btn"></p>
-                </form>
+    <div class="row">
+        <div class="col md-auto skills">
+            <div class="table table-borderless border" id="abil_table">
+                
             </div>
-            <div>
-                <p>Item:<input type="text" id="itemForm" name="item" class="input-field">
-                    <input type="submit" onclick="checkItem();" value="Add" class="btn"></p>
+
+            <div class="table table-borderless border">
+                <div id="purse_table">
+                </div>
+            </div>
+        </div>
+
+        <div class="col md-auto skills">
+            <div class="border">
+                <table>
+                {% for key in skills.keys() %}
+                <tr>
+                <td align="left"><b>{{key.replace("_", " ")}}</b></td>
+                <td align="right"><b>{{skills[key]}}</b></td>
+                </tr>
+                {% endfor %}
+                </table>
             </div>
         </div>
     
-    </div>
-    <div class="flexbox-item items">
-        <div class="table-cont item-table" style="height:280px;overflow:auto;">
-            <table>
-                <th>items</th><th>cnt</th><th>weight</th>
-                {% for i in items %}
-                <tr>
-                <td align="center"><b>{{i.item}}</b></td>
-                <td align="left"><b>{{i.count}}</b></td>
-                <td align="left"><b>{{i.weight}}</b></td>
-                </tr>
+        <div class="col md-auto">
+            <div class="table-cont notes"> 
+                {% for title in notes.keys() %}
+                <h4>{{title}}</h4>
+                <p>{{notes[title]}} </p>
                 {% endfor %}
-            </table>
-        </div>
+            </div>
+            <div class="form">
+                <div>
+                    <form action="{{ '/character/%s.html'%char["name"] }}" method="post" class="create-post">
+                    <p>Note Title:<input type="text" name="title" class="input-field"></p>
+                    <p>Text:<textarea name="text" rows="5" class="input-field"></textarea></p>
+                    <p><input type="submit" value="Post" class="btn"></p>
+                    </form>
+                </div>
+                <div>
+                    <p>Item:<input type="text" id="itemForm" name="item" class="input-field">
+                        <input type="submit" onclick="checkItem();" value="Add" class="btn"></p>
+                </div>
+            </div>
 
-        <div class="table-cont weapon-table">
-            <h5>Weapons</h5>
-            <table>
-                <!-- <th>items</th><th>cnt</th><th>weight</th> -->
-                {% for w in weapons %}
-                <tr>
-                <td align="center"><b>{{w.item}}</b></td>
-                <td align="left"><b>+{{char["atk_mod"]}}</b></td>
-                <td align="left"><b>{{w.damage}}</b></td>
-                </tr>
-                {% endfor %}
-            </table>
+            <div class="table-cont item-table" style="height:280px;overflow:auto;">
+                <table>
+                    <th>items</th><th>cnt</th><th>weight</th>
+                    {% for i in items %}
+                    <tr>
+                    <td align="center"><b>{{i.item}}</b></td>
+                    <td align="left"><b>{{i.count}}</b></td>
+                    <td align="left"><b>{{i.weight}}</b></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="table-cont weapon-table">
+                <h5>Weapons</h5>
+                <table>
+                    <!-- <th>items</th><th>cnt</th><th>weight</th> -->
+                    {% for w in weapons %}
+                    <tr>
+                    <td align="center"><b>{{w.item}}</b></td>
+                    <td align="left"><b>+{{char["atk_mod"]}}</b></td>
+                    <td align="left"><b>{{w.damage}}</b></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
     </div>
 </div>
