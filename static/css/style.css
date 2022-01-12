@@ -88,23 +88,6 @@ select, option {
     margin: 10px;
 }
 
-.skills {
-    min-width: 250;
-    flex-shrink: 0;
-    flex-grow: 1;
-}
-
-.char-main {
-    min-width: 550;
-    flex-grow: 3;
-}
-
-.items {
-    min-width: 300;
-    flex-shrink: 0;
-    flex-grow: 1;
-}
-
 .char-table {
     align-items: center;
 }

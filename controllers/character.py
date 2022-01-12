@@ -1,4 +1,4 @@
-#!/usr/bin/env/python 
+#!/usr/bin/env/python
 
 import re
 
@@ -53,7 +53,7 @@ async def character(name):
 
     if "title" in form:
         await db.addNote(char["id"], form["title"], form["text"])
-    
+
     if "item" in form:
         await addItem(char["id"], form)
 
@@ -79,11 +79,11 @@ async def character(name):
 
     abils = await db.getAbilty(char["id"])
     # abils = {k: abils[k] for k in abils.keys()}
-    char["strength"] = abils["strength"] 
+    char["strength"] = abils["strength"]
     mods = {k: toModifier(abils[k]) for k in abils.keys()}
 
-    abils = [{"abil": k, "score": abils[k], "mod": toModifier(abils[k])} for k in abils.keys()]
-    
+    abils = [{"abil": k[:3], "score": abils[k], "mod": toModifier(abils[k])} for k in abils.keys()]
+
     skills = await db.getSkills(char["id"])
     skills = {k: skills[k] for k in skills.keys()}
     purse = await db.getPurse(char["id"])
@@ -102,7 +102,7 @@ async def character(name):
     char["atk_mod"] = int(mods["strength"]) + int(char["proficiency"])
 
     template_dict = getTemplateDictBase()
-    template_dict.update({"char": char, 
+    template_dict.update({"char": char,
                           "abils": abils,
                           # "mods": mods,
                           "skills": skills,
@@ -111,14 +111,3 @@ async def character(name):
                           "items": items,
                           "weapons": weapons})
     return await render_template("character.html", **template_dict)
-
-
-# @character_page.route('/character/updateHP')
-# async def updateHP():
-#     """ character detail """
-#     test_char = creature(name="AEGON THE CONQUERERER", race="human")
-    
-#     template_dict = getTemplateDictBase()
-#     template_dict.update({"test_char": test_char.toDict(),
-#                           "char_obj": test_char})
-#     return await render_template("character.html", **template_dict)
