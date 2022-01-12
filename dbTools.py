@@ -43,23 +43,21 @@ async def getCharacter(name):
 async def getAbilty(cid):
     db = await get_db()
     cur = await db.execute(
-    """SELECT strength, dexterity, constitution, intelligence, wisdom, charisma
-          FROM abilities
+    """SELECT name, score, proficient
+          FROM ability
       WHERE character_id == '{}' """.format(cid),
     )
-    return await cur.fetchone()
+    return await cur.fetchall()
 
 
 async def getSkills(cid):
     db = await get_db()
     cur = await db.execute(
-    """SELECT acrobatics, animal_handling, arcana, athletics, deception, history,
-              insight, intimidation, investigation, medicine, nature, perception, 
-              performance, persuasion, religion, sleight_of_hand, stealth, survival
-          FROM skills
+    """SELECT name, score, proficient
+          FROM skill
       WHERE character_id == '{}' """.format(cid),
     )
-    return await cur.fetchone()
+    return await cur.fetchall()
 
 
 async def getPurse(cid):
@@ -133,7 +131,8 @@ async def getEncChars(eid):
     return await cur.fetchall()
 
 
-async def addCharacter(name="moron", base={}, abilities={}, skills={}, purse={}):
+async def addCharacter(name="moron", base={}, abilities={}, skills={},
+                       purse={}, proficient=[]):
     loaded = await getCharacters()
     names = [l["name"] for l in loaded]
     db = await get_db()
@@ -146,59 +145,37 @@ async def addCharacter(name="moron", base={}, abilities={}, skills={}, purse={})
     ac = base.get("ac", 10)
 
     await db.execute(
-         """INSERT INTO character (name, hp, ac, iniative, speed, proficiency)
-                VALUES (?, ?, ?, ?, ?, ?)""",
-         [name, hp, ac, iniative, speed, proficiency],
+         """INSERT INTO character (name, hp, max_hp, ac, iniative, speed, proficiency)
+                VALUES (?, ?, ?, ?, ?, ?, ?)""",
+         [name, hp, hp, ac, iniative, speed, proficiency],
     )
     await db.commit()
 
     newChar = await getCharacter(name)
     character_id = newChar["id"]
-    strength = abilities.get("strength", 10)
-    dexterity = abilities.get("dexterity", 10)
-    constitution = abilities.get("constitution", 10)
-    intelligence = abilities.get("intelligence", 10)
-    wisdom = abilities.get("wisdom", 10)
-    charisma = abilities.get("charisma", 10)
-    await db.execute(
-         """INSERT INTO abilities (character_id, strength, dexterity, constitution,
-                                   intelligence, wisdom, charisma)
-                VALUES (?, ?, ?, ?, ?, ?, ?)""",
-         [character_id, strength, dexterity, constitution, intelligence, wisdom, charisma],
-    )
-    await db.commit()
 
-    acrobatics = skills.get("acrobatics", -1)
-    animal_handling = skills.get("animal_handling", -1)
-    arcana = skills.get("arcana", -1)
-    athletics = skills.get("athletics", -1)
-    deception = skills.get("deception", -1)
-    history = skills.get("history", -1)
-    insight = skills.get("insight", -1)
-    intimidation = skills.get("intimidation", -1)
-    investigation = skills.get("investigation", -1)
-    medicine = skills.get("medicine", -1)
-    nature = skills.get("nature", -1)
-    perception = skills.get("perception", -1)
-    performance = skills.get("performance", -1)
-    persuasion = skills.get("persuasion", -1)
-    religion = skills.get("religion", -1)
-    sleight_of_hand = skills.get("sleight_of_hand", -1)
-    stealth = skills.get("stealth", -1)
-    survival = skills.get("survival", -1)
+    for n, s in abilities.items():
+        p = False
+        if n in proficient:
+            p = True
+        await db.execute(
+             """INSERT INTO ability (character_id, name, score, proficient)
+                    VALUES (?, ?, ?, ?)""",
+             [character_id, n, s, p],
+        )
+        await db.commit()
 
-    await db.execute(
-         """INSERT INTO skills (character_id, acrobatics, animal_handling, arcana, athletics, deception, history,
-                            insight, intimidation, investigation, medicine, nature,
-                            perception, performance, persuasion, religion, sleight_of_hand, stealth, survival)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-         [character_id, acrobatics, animal_handling, arcana, athletics, deception, history,
-          insight, intimidation, investigation, medicine, nature, perception, performance,
-          persuasion, religion, sleight_of_hand, stealth, survival],
-    )
-    await db.commit()
+    for n, s in skills.items():
+        p = False
+        if n in proficient:
+            p = True
+        await db.execute(
+             """INSERT INTO skill (character_id, name, score, proficient)
+                    VALUES (?, ?, ?, ?)""",
+             [character_id, n, s, p],
+        )
+        await db.commit()
 
-    character_id = newChar["id"]
     cp = purse.get("cp", 0)
     sp = purse.get("sp", 0)
     ep = purse.get("ep", 0)

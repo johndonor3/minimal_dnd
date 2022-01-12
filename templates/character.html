@@ -105,7 +105,7 @@
     dndQuery("equipment", item_name, addItem);
   }
 
-  j_abils = {{abils | tojson}}
+  // j_abils = {{abils | tojson}}
   j_purse = {{purse | tojson}}
 
 </script>
@@ -129,7 +129,7 @@
         <div class="card bg-transparent text-center p-1" style="width: 4rem;">
           <div class="card-body border border-danger rounded-3">
             <h6 class="card-title">HP</h5>
-            <h2 class="card-text">{{char["hp"]}}/34</h2>
+            <h2 class="card-text">{{char["hp"]}}/<b>{{char["max_hp"]}}</b></h2>
           </div>
         </div>
         <div class="card bg-transparent text-center p-1" style="width: 7rem;">
@@ -163,11 +163,12 @@
       <div class="border border-danger rounded-3">
         <table class="table table-borderless">
           <tbody>
-          {% for key in skills.keys() %}
-            <tr>
-              <td style="text-align:right"><small class="text-muted">&#11044;</small></td>
-              <td style="text-align:left">{{key.replace("_", " ")}}</td>
-              <td style="text-align:right;"><b>{{skills[key]}}</b></td>
+          {% for s in skills %}
+            <tr {% if s["proficient"]%} class="bg-danger"{% endif %}>
+              <td style="width: 2px;"></td>
+              <td style="text-align:left">{{s["name"].replace("_", " ")}}</td>
+              <td style="text-align:right;"><b>{{s["score"]}}</b></td>
+              <td style="width: 2px;"></td>
             </tr>
           {% endfor %}
           </tbody>

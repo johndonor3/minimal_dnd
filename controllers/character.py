@@ -77,15 +77,21 @@ async def character(name):
         dbChar = await db.getCharacter(name)
         char = {k: dbChar[k] for k in dbChar.keys()}
 
-    abils = await db.getAbilty(char["id"])
-    # abils = {k: abils[k] for k in abils.keys()}
-    char["strength"] = abils["strength"]
-    mods = {k: toModifier(abils[k]) for k in abils.keys()}
+    abil_query = await db.getAbilty(char["id"])
+    abils = list()
+    for a in abil_query:
+        if a["name"] == "strength":
+            char["strength"] = a["score"]
+        s = {"abil": a["name"][:3], "mod": toModifier(a["score"]),
+             "score": a["score"], "proficient": a["proficient"]}
+        abils.append(s)
 
-    abils = [{"abil": k[:3], "score": abils[k], "mod": toModifier(abils[k])} for k in abils.keys()]
+    # abils = [{"abil": k[:3], "score": abils[k], "mod": toModifier(abils[k])} for k in abils.keys()]
 
     skills = await db.getSkills(char["id"])
-    skills = {k: skills[k] for k in skills.keys()}
+    # skills = {k: skills[k] for k in skills.keys()}
+    skills = [{"name": k["name"], "score": k["score"],
+              "proficient": k["proficient"]} for k in skills]
     purse = await db.getPurse(char["id"])
     # purse = {k: purse[k] for k in purse.keys()}
     purse = [{"coin": k, "val": purse[k]} for k in purse.keys()]
@@ -98,8 +104,12 @@ async def character(name):
 
     gear_lbs = sum([i["weight"] for i in items])
 
+    # #############
+    # money weight
+    # #############
+
     char["gear_lbs"] = gear_lbs
-    char["atk_mod"] = int(mods["strength"]) + int(char["proficiency"])
+    char["atk_mod"] = int(char["strength"]) + int(char["proficiency"])
 
     template_dict = getTemplateDictBase()
     template_dict.update({"char": char,

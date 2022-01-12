@@ -1,5 +1,5 @@
 name:
-    "Napolean"
+    "Napolean2"
 base:
     iniative: 3
     speed: 30
@@ -29,6 +29,7 @@ skills:
     sleight_of_hand: 0
     stealth: 0
     survival: 10
+proficient: [strength, 'wisdom', perception, histroy, deception, "performance"]
 purse:
     cp: 0
     sp: 0
