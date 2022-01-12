@@ -114,10 +114,10 @@
 
 <div class="container bg-transparent">
   <div class="row gy-5">
-    <div class="col md-6">
+    <div class="col-md-6">
       {{abilCards(abils)}}
     </div>
-    <div class="col md-6">
+    <div class="col-md-6">
       <div class="card-group">
         <div class="card bg-transparent text-center p-1" style="width: 2rem;">
           <div class="card-body border border-danger rounded-3">
@@ -148,7 +148,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col md-3 skills">
+    <div class="col-md-2">
       <div class="table table-borderless border border-danger rounded-3" id="abil_table">
         
       </div>
@@ -159,20 +159,23 @@
       </div>
     </div>
 
-    <div class="col md-3 skills">
+    <div class="col-md-3">
       <div class="border border-danger rounded-3">
-        <table>
-        {% for key in skills.keys() %}
-        <tr>
-        <td align="left"><b>{{key.replace("_", " ")}}</b></td>
-        <td align="right"><b>{{skills[key]}}</b></td>
-        </tr>
-        {% endfor %}
+        <table class="table table-borderless">
+          <tbody>
+          {% for key in skills.keys() %}
+            <tr>
+              <td style="text-align:right"><small class="text-muted">&#11044;</small></td>
+              <td style="text-align:left">{{key.replace("_", " ")}}</td>
+              <td style="text-align:right;"><b>{{skills[key]}}</b></td>
+            </tr>
+          {% endfor %}
+          </tbody>
         </table>
       </div>
     </div>
   
-    <div class="col md-6">
+    <div class="col-md-auto">
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
           <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#weapons" type="button" role="tab" aria-controls="weapons" aria-selected="true">Weapons</button>
@@ -209,6 +212,10 @@
             </tr>
             {% endfor %}
           </table>
+          <div>
+            <p>Item:<input type="text" id="itemForm" name="item" class="input-field">
+              <input type="submit" onclick="checkItem();" value="Add" class="btn"></p>
+          </div>
         </div>
         <div class="tab-pane fade" id="notes" role="tabpanel" aria-labelledby="notes-tab">
           <div class="table-cont notes"> 
@@ -217,25 +224,22 @@
             <p>{{notes[title]}} </p>
             {% endfor %}
           </div>
-          <div class="form">
-            <div>
-              <form action="{{ '/character/%s.html'%char["name"] }}" method="post" class="create-post">
-              <p>Note Title:<input type="text" name="title" class="input-field"></p>
-              <p>Text:<textarea name="text" rows="5" class="input-field"></textarea></p>
-              <p><input type="submit" value="Post" class="btn"></p>
-              </form>
-            </div>
-            <div>
-              <p>Item:<input type="text" id="itemForm" name="item" class="input-field">
-                <input type="submit" onclick="checkItem();" value="Add" class="btn"></p>
-            </div>
+          <form action="{{ '/character/%s.html'%char["name"] }}" method="post" class="create-post">
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Note Title:</label>
+            <input type="text" class="form-control" name="title" placeholder="that guy was weird">
           </div>
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">Text:</label>
+            <textarea class="form-control" name="text" rows="5"></textarea>
+          </div>
+          <p><input type="submit" value="Post" class="btn"></p>
+          </form>
         </div>
       </div>
     </div>
   </div>
 </div>
-
 
 <script src="../static/js/table.js" type="text/babel"> </script>
 
