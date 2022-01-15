@@ -101,6 +101,38 @@
     purseUpdate({{char["id"]}}, nom, val);
   }
 
+  function deleteItem(item){
+
+    console.log("delete!! ", item)
+
+    var form2 = document.createElement('form');
+    form2.method = "post";
+    form2.action = "/character/".concat(char_name, ".html");
+
+    var hiddenField2 = document.createElement('input');
+    hiddenField2.type = 'hidden';
+    hiddenField2.name = "deleteItem";
+    hiddenField2.value = item;
+    form2.appendChild(hiddenField2);
+
+    document.body.appendChild(form2);
+    form2.submit();
+  }
+
+  function updateItem(item) {
+    cnt = document.getElementById(item+"Item").value;
+    if(cnt < 1){
+      var forReal = confirm("Are you sure you want to delete" + item + "?")
+        if (forReal) {
+            deleteItem(item);
+        }
+    }
+    else{
+      itemUpdateCnt({{char["id"]}}, item, cnt);  
+    }
+  }
+
+
 </script>
 
 <!-- <h1 class="char-title">Character info for {{char.name}} </h1> -->
@@ -208,8 +240,13 @@
             {% for i in items %}
             <tr>
             <td align="center"><b>{{i.name}}</b></td>
-            <td align="left"><b>{{i.count}}</b></td>
+            <td align="left">
+              <input type="text" value="{{i.count}}" onchange="updateItem('{{i.name}}');" id="{{i.name}}Item" style="width: 2rem;">
+            </td>
             <td align="left"><b>{{i.weight}}</b></td>
+            <td align="center">
+              <button type="button" class="btn btn-danger btn-sm"  onclick="deleteItem('{{i.name}}');">x</button>
+            </td>
             </tr>
             {% endfor %}
           </table>

@@ -2,7 +2,8 @@
 
 from quart import Blueprint, request, jsonify
 
-from dbTools import updateCharLoc, updateMonster, updateCharacter, updatePurse
+from dbTools import (updateCharLoc, updateMonster, updateCharacter,
+                     updatePurse, changeItemCnt)
 
 dbEndPoints = Blueprint("dbEndPoints", __name__)
 
@@ -48,5 +49,17 @@ async def purseUpdate():
     nom = form["nom"]
     val = int(form["val"])
     await updatePurse(cid, nom, val)
+
+    return jsonify([])
+
+
+@dbEndPoints.route('/db/itemUpdate/', methods=["POST"])
+async def itemUpdate():
+    """ send updates for location changes """
+    form = await request.form
+    cid = int(form["cid"])
+    item = form["item"]
+    cnt = int(form["cnt"])
+    await changeItemCnt(cid, item, cnt)
 
     return jsonify([])

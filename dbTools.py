@@ -227,12 +227,25 @@ async def addItem(cid, name, weight, description, weapon=False,
                   damage=None, count=1):
     db = await get_db()
 
-    await db.execute(
-         """INSERT INTO item (character_id, name, weight, description,
-                               weapon, damage, count)
-                VALUES (?, ?, ?, ?, ?, ?, ?)""",
-         [cid, name, weight, description, weapon, damage, count],
+    cur = await db.execute(
+    """SELECT count
+          FROM item WHERE name == '{}' """.format(name),
     )
+    dbCount = await cur.fetchone()
+
+    if dbCount is not None:
+        dbCount = int(dbCount[0])
+        count = count + dbCount
+        await db.execute(
+            f"UPDATE item SET count = {count} WHERE name == '{name}'"
+        )
+    else:
+        await db.execute(
+             """INSERT INTO item (character_id, name, weight, description,
+                                   weapon, damage, count)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)""",
+             [cid, name, weight, description, weapon, damage, count],
+        )
     await db.commit()
 
 
@@ -318,6 +331,21 @@ async def deleteCharacterByID(cid):
 async def deleteCharacterByName(name):
     db = await get_db()
     await db.execute("DELETE FROM character WHERE name == '{}'".format(name))
+    await db.commit()
+
+
+async def changeItemCnt(cid, item, count):
+    db = await get_db()
+    if count < 1:
+        await db.execute(
+            f"DELETE FROM item WHERE name == '{item}' and character_id == '{cid}'"
+            )
+
+    else:
+        await db.execute(
+         f"""UPDATE item SET count = {count}
+             WHERE name == '{item}' and character_id == '{cid}'""",
+        )
     await db.commit()
 
 

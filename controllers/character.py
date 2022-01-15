@@ -57,6 +57,9 @@ async def character(name):
     if "item" in form:
         await addItem(char["id"], form)
 
+    if "deleteItem" in form:
+        await db.changeItemCnt(char["id"], form["deleteItem"], 0)
+
     if "nom" in form:
         nom = form["nom"]
         val = int(form["val"])

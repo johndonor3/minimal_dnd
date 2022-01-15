@@ -1,0 +1,13 @@
+{% macro abilCards(abils) %}
+<div class="card-group">
+    {% for a in abils %}
+    <div class="card bg-transparent text-center p-1" style="width: 3.5rem;">
+        <div class="card-body border border-danger rounded-3 {% if a["proficient"]%}bg-danger{% endif %} ">
+            <h6 class="card-title">{{a["abil"]}}</h5>
+            <h2 class="card-text">{{a["mod"]}}</h2>
+            <small class="text-muted">{{a["score"]}}</small>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endmacro %}
