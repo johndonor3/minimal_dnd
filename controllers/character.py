@@ -57,16 +57,6 @@ async def character(name):
     if "item" in form:
         await addItem(char["id"], form)
 
-    if "hp" in form:
-        curr = char["hp"]
-        delta = int(form["hp"])
-        # update is expecting 2 lists!
-        await db.updateCharacter(char["id"], ["hp"], [curr+delta])
-
-        # then pull again
-        dbChar = await db.getCharacter(name)
-        char = {k: dbChar[k] for k in dbChar.keys()}
-
     if "nom" in form:
         nom = form["nom"]
         val = int(form["val"])

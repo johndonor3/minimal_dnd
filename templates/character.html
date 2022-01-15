@@ -12,29 +12,20 @@
 {% block body %}
 
 <script src="../static/js/bootstrap.min.js"></script>
+<script src="../static/js/dbForms.js"></script>
 
 <script type="text/javascript">
 
   const char_name = "{{char["name"]}}"
 
-  function updateHP(delta){
+  function updateHP(){
 
-    const form = document.createElement('form');
-    form.method = "post";
-    form.action = "/character/".concat(char_name, ".html");
+    let curr_hp = document.getElementById("hpInput").value;
 
-
-    const hiddenField = document.createElement('input');
-    hiddenField.type = 'hidden';
-    hiddenField.name = "hp";
-    hiddenField.value = delta;
-    form.appendChild(hiddenField);
-    
-    document.body.appendChild(form);
-    form.submit();
+    charUpdate({{char["id"]}}, 'hp', curr_hp);
   }
 
-  function handleClick(evt) {
+  function handleHPclick(evt) {
     var node = evt.target;
 
     if (node.value == 'hp_p') {
@@ -105,8 +96,10 @@
     dndQuery("equipment", item_name, addItem);
   }
 
-  // j_abils = {{abils | tojson}}
-  j_purse = {{purse | tojson}}
+  function updatePurse(nom) {
+    val = document.getElementById(nom+"Purse").value;
+    purseUpdate({{char["id"]}}, nom, val);
+  }
 
 </script>
 
@@ -129,7 +122,9 @@
         <div class="card bg-transparent text-center p-1" style="width: 4rem;">
           <div class="card-body border border-danger rounded-3">
             <h6 class="card-title">HP</h5>
-            <h2 class="card-text">{{char["hp"]}}/<b>{{char["max_hp"]}}</b></h2>
+            <h2 class="card-text">
+              <input type="text" value="{{char["hp"]}}" onchange="updateHP();" id="hpInput" style="width: 4rem;">
+              /<b>{{char["max_hp"]}}</b></h2>
           </div>
         </div>
         <div class="card bg-transparent text-center p-1" style="width: 7rem;">
@@ -149,14 +144,19 @@
   </div>
   <div class="row">
     <div class="col-md-2">
-      <div class="table table-borderless border border-danger rounded-3" id="abil_table">
-        
-      </div>
-
-      <div class="table table-borderless border border-danger rounded-3">
-        <div id="purse_table">
-        </div>
-      </div>
+      <table class="table table-borderless border border-danger rounded-3">
+        <tbody>
+          {% for c in purse %}
+            <tr>
+              <td style="text-align:left">{{c["coin"]}}</td>
+              <td style="text-align:left;">
+              <input type="text" value="{{c["val"]}}" onchange="updatePurse('{{c["coin"]}}');" id="{{c["coin"]}}Purse" style="width: 3rem;">
+              </td>
+              <!-- <td style="width: 2px;"></td> -->
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
 
     <div class="col-md-3">
@@ -195,7 +195,7 @@
             <!-- <th>items</th><th>cnt</th><th>weight</th> -->
             {% for w in weapons %}
             <tr>
-            <td align="center"><b>{{w.item}}</b></td>
+            <td align="center"><b>{{w.name}}</b></td>
             <td align="left"><b>+{{char["atk_mod"]}}</b></td>
             <td align="left"><b>{{w.damage}}</b></td>
             </tr>
@@ -207,7 +207,7 @@
             <th>items</th><th>cnt</th><th>weight</th>
             {% for i in items %}
             <tr>
-            <td align="center"><b>{{i.item}}</b></td>
+            <td align="center"><b>{{i.name}}</b></td>
             <td align="left"><b>{{i.count}}</b></td>
             <td align="left"><b>{{i.weight}}</b></td>
             </tr>
@@ -215,7 +215,7 @@
           </table>
           <div>
             <p>Item:<input type="text" id="itemForm" name="item" class="input-field">
-              <input type="submit" onclick="checkItem();" value="Add" class="btn"></p>
+              <button type="button" onclick="checkItem();" class="btn btn-danger">Add</button>
           </div>
         </div>
         <div class="tab-pane fade" id="notes" role="tabpanel" aria-labelledby="notes-tab">
@@ -241,7 +241,5 @@
     </div>
   </div>
 </div>
-
-<script src="../static/js/table.js" type="text/babel"> </script>
 
 {% endblock body %}
