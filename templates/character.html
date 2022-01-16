@@ -140,35 +140,59 @@
 <div class="container bg-transparent">
   <div class="row gy-5">
     <div class="col-md-6">
-      {{abilCards(abils)}}
+      <div class="row">
+        <h1>{{char["name"]}}</h1>
+      </div>
+      <div class="row">
+        {{abilCards(abils)}}
+      </div>
     </div>
     <div class="col-md-6">
-      <div class="card-group">
-        <div class="card bg-transparent text-center p-1" style="width: 2rem;">
-          <div class="card-body border border-danger rounded-3">
-            <h6 class="card-title">Armor</h5>
-            <h2 class="card-text">{{char["ac"]}}</h2>
-            <h6 class="card-title">Class</h5>
+      <div class="row">
+        <div class="card-group">
+          <div class="card bg-transparent text-center p-1" style="width: 8rem;">
+            <div class="card-body border border-danger rounded-3">
+              <h6 class="card-text">Speed</h6>
+              <h2 class="card-text">{{char["speed"]}}</h2>
+            </div>
+          </div>
+          <div class="card bg-transparent text-center p-1" style="width: 7rem;">
+            <div class="card-body border border-danger rounded-3">
+              <h6 class="card-text">Initiative</h6>
+              <h2 class="card-text">+{{char["iniative"]}}</h2>
+            </div>
+          </div>
+          <div class="card bg-transparent text-center p-1" style="width: 8rem;">
+            <div class="card-body border border-danger rounded-3">
+              <h6 class="card-text">Proficiency</h6>
+              <h2 class="card-text">+{{char["proficiency"]}}</h2>
+            </div>
           </div>
         </div>
-        <div class="card bg-transparent text-center p-1" style="width: 4rem;">
-          <div class="card-body border border-danger rounded-3">
-            <h6 class="card-title">HP</h5>
-            <h2 class="card-text">
-              <input type="text" value="{{char["hp"]}}" onchange="updateHP();" id="hpInput" style="width: 4rem;">
-              /<b>{{char["max_hp"]}}</b></h2>
+      </div>
+      <div class="row">
+        <div class="card-group">
+          <div class="card bg-transparent text-center p-1" style="width: 2rem;">
+            <div class="card-body border border-danger rounded-3">
+              <h6 class="card-title">Armor</h5>
+              <h2 class="card-text">{{char["ac"]}}</h2>
+              <h6 class="card-title">Class</h5>
+            </div>
           </div>
-        </div>
-        <div class="card bg-transparent text-center p-1" style="width: 7rem;">
-          <div class="card-body border border-danger rounded-3">
-            <h6 class="card-title">Initiative</h5>
-            <h2 class="card-text">+{{char["iniative"]}}</h2>
+          <div class="card bg-transparent text-center p-1" style="width: 4rem;">
+            <div class="card-body border border-danger rounded-3">
+              <h6 class="card-title">HP</h5>
+              <h2 class="card-text">
+                <input type="text" value="{{char["hp"]}}" onchange="updateHP();" id="hpInput" style="width: 4rem;">
+                /<b>{{char["max_hp"]}}</b></h2>
+            </div>
           </div>
-        </div>
-        <div class="card bg-transparent text-center p-1" style="width: 8rem;">
-          <div class="card-body border border-danger rounded-3">
-            <h6 class="card-title">Proficiency</h5>
-            <h2 class="card-text">+{{char["proficiency"]}}</h2>
+          <div class="card bg-transparent text-center p-1" style="width: 4rem;">
+            <div class="card-body border border-danger rounded-3">
+              <h6 class="card-title">Capacity</h5>
+              <h2 class="card-text">{{char["gear_lbs"]}}/<b>{{char["strength"] * 15}}</b></h2>
+              <h6 class="card-text">lbs</h6>
+            </div>
           </div>
         </div>
       </div>
@@ -199,7 +223,7 @@
             <tr {% if s["proficient"]%} class="bg-danger"{% endif %}>
               <td style="width: 2px;"></td>
               <td style="text-align:left">{{s["name"].replace("_", " ")}}</td>
-              <td style="text-align:right;"><b>{{s["score"]}}</b></td>
+              <td style="text-align:right;"><b>{% if s["score"] > 0 %}+{% endif %}{{s["score"]}}</b></td>
               <td style="width: 2px;"></td>
             </tr>
           {% endfor %}

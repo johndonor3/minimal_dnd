@@ -96,6 +96,7 @@ async def character(name):
     weapons = [i for i in items if i["weapon"]]
 
     gear_lbs = sum([i["weight"] for i in items])
+    gear_lbs = round(gear_lbs + sum([p["val"] for p in purse])/50.)
 
     # #############
     # money weight
