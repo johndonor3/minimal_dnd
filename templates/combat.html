@@ -16,7 +16,7 @@
             <button type="button" onclick=resizeGrid(-5) class="btn">-</button>
             <button type="button" onclick=resizeGrid(5) class="btn">+</button>
         </div>
-        
+
         <div class="dropdown">
           <button onclick="toggleDropDown()" class="btn dropbtn">Choose Map</button>
           <div id="myDropdown" class="dropdown-content">
@@ -52,6 +52,14 @@
         {% for m in monImages %}
           <a onClick=setVisibleOff("{{m}}")><img src="/uploads/{{m}}" width="320px" id="{{m}}" class="monster-image" style="display: none" > </a>
         {% endfor %}
+        <button type="button" onclick=showTerrain() class="btn">terrain</button>
+        <div id="terrain-box" style="display: none">
+            x-pos <input type="text" value="0" id="xTerrain" style="width: 2rem;">
+            y-pos <input type="text" value="0" id="yTerrain" style="width: 2rem;">
+            height<input type="text" value="1" id="hTerrain" style="width: 2rem;">
+            width <input type="text" value="1" id="wTerrain" style="width: 2rem;">
+            <button type="button" onclick="addTerrain()" class="btn">add</button>
+        </div>
     </div>
 
     <div class="flexbox-item combat-map">
@@ -64,6 +72,16 @@
     enc_monsters = {{monsters | tojson}}
     var current_map = "{{map}}";
     const eid = {{eid}}
+    var gridSize = {{grid_size}}
+
+    function showTerrain() {
+        var x = document.getElementById("terrain-box");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
 
     function changeMap(name){
 

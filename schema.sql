@@ -71,7 +71,8 @@ DROP TABLE IF EXISTS encounter;
 CREATE TABLE encounter (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    title TEXT NOT NULL,
-   useMap TEXT NOT NULL
+   useMap TEXT NOT NULL,
+   grid INT
 );
 
 DROP TABLE IF EXISTS encounter_monster;
@@ -96,4 +97,15 @@ CREATE TABLE location (
    y INT NOT NULL,
    FOREIGN KEY(encounter_id) REFERENCES encounter(id) ON DELETE CASCADE,
    FOREIGN KEY(character_id) REFERENCES character(id) ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS terrain;
+CREATE TABLE terrain (
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   encounter_id INT NOT NULL,
+   x INT NOT NULL,
+   y INT NOT NULL,
+   width INT NOT NULL,
+   height INT NOT NULL,
+   FOREIGN KEY(encounter_id) REFERENCES encounter(id) ON DELETE CASCADE
 );

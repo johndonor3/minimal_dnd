@@ -3,7 +3,8 @@
 from quart import Blueprint, request, jsonify
 
 from dbTools import (updateCharLoc, updateMonster, updateCharacter,
-                     updatePurse, changeItemCnt)
+                     updatePurse, changeItemCnt, updateTerrain, addTerrain,
+                     encTerrain)
 
 dbEndPoints = Blueprint("dbEndPoints", __name__)
 
@@ -63,3 +64,32 @@ async def itemUpdate():
     await changeItemCnt(cid, item, cnt)
 
     return jsonify([])
+
+
+@dbEndPoints.route('/db/terrainUpdate/', methods=["POST"])
+async def terrainUpdate():
+    """ send updates for location changes """
+    form = await request.form
+    eid = int(form["eid"])
+    x = int(form["x"])
+    y = int(form["y"])
+    print(form)
+    if "tid" in form:
+        tid = int(form["tid"])
+        await updateTerrain(tid, eid, x, y)
+    else:
+        width = int(form["width"])
+        height = int(form["height"])
+        await addTerrain(eid, x, y, width, height)
+
+    return jsonify([])
+
+
+@dbEndPoints.route('/db/getTerrain/<int:eid>', methods=["GET"])
+async def getTerrain(eid):
+    """ get all terrain """
+    terrain = await encTerrain(eid)
+
+    terrain = [{k: t[k] for k in t.keys()} for t in terrain]
+
+    return jsonify(terrain)

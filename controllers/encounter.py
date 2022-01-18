@@ -1,4 +1,4 @@
-#!/usr/bin/env/python 
+#!/usr/bin/env/python
 
 import re
 import os
@@ -11,6 +11,7 @@ import dbTools as db
 # from rules.creature import creature
 
 encounter_page = Blueprint("encounter", __name__)
+
 
 def convertSize(size):
     # relative to 5ft gridsize

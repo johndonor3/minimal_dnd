@@ -40,6 +40,9 @@ async def combat(name):
 
     eid = encounter["id"]
     useMap = encounter["useMap"]
+    grid_size = encounter["grid"]
+    if grid_size is None:
+        grid_size = 40
 
     if "map" in form:
         new_name = form["map"]
@@ -90,5 +93,6 @@ async def combat(name):
     template.update({"mapList": maps})
     template.update({"monImages": imgs})
     template.update({"eid": eid})
+    template.update({"grid_size": grid_size})
 
     return await render_template("combat.html", **template)

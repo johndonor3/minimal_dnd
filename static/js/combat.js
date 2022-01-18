@@ -31,7 +31,6 @@ window.onclick = function(event) {
   }
 }
 
-
 // borrowing ready-made code
 // https://riptutorial.com/html5-canvas/example/18918/dragging-circles---rectangles-around-the-canvas
 // cheers riptutorial!
@@ -44,10 +43,9 @@ var ch=canvas.height;
 // document.body.appendChild(canvas);
 canvas.style.border='1px solid red';
 
-var gridSize = 40;
+// var gridSize = 40;
 
 function resizeGrid(delta) {
-    // let intDelta = parseInt(event.target.value);
     gridSize += delta;
     drawInit();
     drawAll();
@@ -71,13 +69,66 @@ var shapes=[];
 var texts=[];
 var lastMoved = -1;
 
+
+function integrateTerrain(terrain){
+    for(var z=0; z < terrain.length; z++){
+        let t = terrain[z]
+        let addToShapes = true;
+        shapes.forEach((shape, index) =>{
+            if (shape.terrain){
+                if (shape.id == t.id){
+                    shape.x = t.x;
+                    shape.x = t.x;
+                    addToShapes = false;
+                }
+            }
+        })
+        if (addToShapes){
+            shapes.push( {x:t.x, y:t.y, id:t.id, monster:false,
+             width:t.width, height:t.height, 
+             color:'grey', terrain:true});
+            texts.push({x:t.x, y:t.y, text: ''});
+        }
+    }
+    drawAll();
+}
+
+function addTerrain(){
+    x = document.getElementById("xTerrain").value;
+    y = document.getElementById("yTerrain").value;
+    h = document.getElementById("hTerrain").value;
+    w = document.getElementById("wTerrain").value;
+    newTerrain(x*gridSize, y*gridSize, w*gridSize, h*gridSize);
+}
+
+function newTerrain(x, y, w, h){
+    terrainUpdate(eid, x, y, w, h);
+    setTimeout(getTerrain, 200);}
+
+function getTerrain() {
+    var url = '/db/getTerrain/' + eid;
+    return fetch(url)
+    .then((response) => response.json())
+    .then((terrain) => {
+        integrateTerrain(terrain);
+   })
+   .catch((error) => {
+     console.log(error);
+    });
+}
+
 function updateDbLoc(){
     if (lastMoved == -1) {
         return
     }
     else{
         let moved = shapes[lastMoved];
-        locUpdate(moved.id, eid, moved.x, moved.y, moved.monster);
+        if (moved.terrain){
+            terrainUpdate(eid, moved.x, moved.y, moved.width, moved.height, moved.id);
+        }
+        else{
+            locUpdate(moved.id, eid, moved.x, moved.y, moved.monster);    
+        }
     }
 }
 
@@ -103,12 +154,13 @@ function snapToGrid(){
 function drawInit(){
     shapes=[];
     texts=[];
+    getTerrain();
     for(var i=0; i < enc_chars.length; i++){
         let char = enc_chars[i];
         var size = Math.floor(gridSize*0.5);
 
         shapes.push( {x:char.x, y:char.y, radius:size, color:'blue', name: char.name,
-                      id:char.id, monster:false,} );
+                      id:char.id, monster:false, terrain:false} );
 
         let assigned = false;
         let tried = 1;
@@ -132,7 +184,7 @@ function drawInit(){
         let monster = enc_monsters[i];
         shapes.push( {x:monster.x, y:monster.y, id:monster.id, monster:true,
                       width:monster.size*gridSize, height:monster.size*gridSize, 
-                      color:'red', name: monster.name} );
+                      color:'red', name: monster.name, terrain:false} );
         texts.push( {x:monster.x, y:monster.y,  
                      text: monster.name[0] + " " + monster.id%100})
     }
@@ -142,6 +194,7 @@ drawInit();
 // drag related vars
 var isDragging=false;
 var startX,startY;
+var moveTerrain=true;
 
 // hold the index of the shape being dragged (if any)
 var selectedShapeIndex;
@@ -486,6 +539,9 @@ function handleMouseDown(e){
     // post result if mouse is in a shape
     for(var i=0;i<shapes.length;i++){
         if(isMouseInShape(startX,startY,shapes[i])){
+            // if (shapes[i].terrain & !moveTerrain){
+            //     return;
+            // }
             // the mouse is inside this shape
             // select this shape
             selectedShapeIndex=i;

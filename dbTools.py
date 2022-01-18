@@ -23,9 +23,9 @@ async def getCharacters():
     """
     db = await get_db()
     cur = await db.execute(
-    """SELECT *
-          FROM character
-      ORDER BY id DESC""",
+        """SELECT *
+              FROM character
+          ORDER BY id DESC""",
     )
     return await cur.fetchall()
 
@@ -33,9 +33,9 @@ async def getCharacters():
 async def getCharacter(name):
     db = await get_db()
     cur = await db.execute(
-    """SELECT *
-          FROM character
-      WHERE name == '{}' """.format(name),
+        """SELECT *
+              FROM character
+          WHERE name == '{}' """.format(name),
     )
     return await cur.fetchone()
 
@@ -43,9 +43,9 @@ async def getCharacter(name):
 async def getAbilty(cid):
     db = await get_db()
     cur = await db.execute(
-    """SELECT name, score, proficient
-          FROM ability
-      WHERE character_id == '{}' """.format(cid),
+        """SELECT name, score, proficient
+              FROM ability
+          WHERE character_id == '{}' """.format(cid),
     )
     return await cur.fetchall()
 
@@ -53,9 +53,9 @@ async def getAbilty(cid):
 async def getSkills(cid):
     db = await get_db()
     cur = await db.execute(
-    """SELECT name, score, proficient
-          FROM skill
-      WHERE character_id == '{}' """.format(cid),
+        """SELECT name, score, proficient
+              FROM skill
+          WHERE character_id == '{}' """.format(cid),
     )
     return await cur.fetchall()
 
@@ -63,9 +63,9 @@ async def getSkills(cid):
 async def getPurse(cid):
     db = await get_db()
     cur = await db.execute(
-    """SELECT cp, sp, ep, gp, pp
-          FROM purse
-      WHERE character_id == '{}' """.format(cid),
+        """SELECT cp, sp, ep, gp, pp
+              FROM purse
+          WHERE character_id == '{}' """.format(cid),
     )
     return await cur.fetchone()
 
@@ -73,9 +73,9 @@ async def getPurse(cid):
 async def getNotes(cid):
     db = await get_db()
     cur = await db.execute(
-    """SELECT *
-          FROM note
-      WHERE character_id == '{}' """.format(cid),
+        """SELECT *
+              FROM note
+          WHERE character_id == '{}' """.format(cid),
     )
     return await cur.fetchall()
 
@@ -83,9 +83,9 @@ async def getNotes(cid):
 async def getItems(cid):
     db = await get_db()
     cur = await db.execute(
-    """SELECT *
-          FROM item
-      WHERE character_id == '{}' """.format(cid),
+        """SELECT *
+              FROM item
+          WHERE character_id == '{}' """.format(cid),
     )
     return await cur.fetchall()
 
@@ -93,9 +93,9 @@ async def getItems(cid):
 async def getEncounters():
     db = await get_db()
     cur = await db.execute(
-    """SELECT *
-          FROM encounter
-      ORDER BY id DESC""",
+        """SELECT *
+              FROM encounter
+          ORDER BY id DESC""",
     )
     return await cur.fetchall()
 
@@ -103,19 +103,19 @@ async def getEncounters():
 async def getEncounter(name):
     db = await get_db()
     cur = await db.execute(
-    """SELECT *
-          FROM encounter
-      WHERE title == '{}' """.format(name),
-    )
+        """SELECT *
+              FROM encounter
+          WHERE title == '{}' """.format(name),
+        )
     return await cur.fetchone()
 
 
 async def getEncMonsters(eid):
     db = await get_db()
     cur = await db.execute(
-    """SELECT *
-          FROM encounter_monster
-      WHERE encounter_id == '{}' """.format(eid),
+        """SELECT *
+              FROM encounter_monster
+          WHERE encounter_id == '{}' """.format(eid),
     )
     return await cur.fetchall()
 
@@ -123,10 +123,10 @@ async def getEncMonsters(eid):
 async def getEncChars(eid):
     db = await get_db()
     cur = await db.execute(
-    """SELECT c.id, c.name, c.hp, c.img, l.x, l.y
-          FROM character AS c
-          JOIN location AS l ON c.id = l.character_id
-      WHERE l.encounter_id == '{}' """.format(eid),
+        """SELECT c.id, c.name, c.hp, c.img, l.x, l.y
+              FROM character AS c
+              JOIN location AS l ON c.id = l.character_id
+          WHERE l.encounter_id == '{}' """.format(eid),
     )
     return await cur.fetchall()
 
@@ -228,9 +228,9 @@ async def addItem(cid, name, weight, description, weapon=False,
     db = await get_db()
 
     cur = await db.execute(
-    """SELECT count
-          FROM item WHERE name == '{}' """.format(name),
-    )
+        """SELECT count
+              FROM item WHERE name == '{}' """.format(name),
+        )
     dbCount = await cur.fetchone()
 
     if dbCount is not None:
@@ -340,7 +340,6 @@ async def changeItemCnt(cid, item, count):
         await db.execute(
             f"DELETE FROM item WHERE name == '{item}' and character_id == '{cid}'"
             )
-
     else:
         await db.execute(
          f"""UPDATE item SET count = {count}
@@ -360,3 +359,33 @@ async def deleteEncounter(eid):
     await db.execute("DELETE FROM encounter WHERE id == '{}'".format(eid))
     await db.execute("DELETE FROM encounter_monster WHERE encounter_id == '{}'".format(eid))
     await db.commit()
+
+
+async def addTerrain(eid, x, y, width, height):
+    db = await get_db()
+
+    await db.execute(
+         """INSERT INTO terrain (encounter_id, x, y, width, height)
+                VALUES (?, ?, ?, ?, ?)""",
+         [eid, x, y, width, height],
+    )
+    await db.commit()
+
+
+async def updateTerrain(tid, eid, x, y):
+    db = await get_db()
+    if x < 0 or y < 0:
+        await db.execute(f"DELETE FROM terrain WHERE id == '{tid}'")
+    else:
+        await db.execute(
+         f"UPDATE terrain SET x = {x}, y = {y} WHERE id == '{tid}'",
+        )
+    await db.commit()
+
+
+async def encTerrain(eid):
+    db = await get_db()
+    cur = await db.execute(
+        f"SELECT id, x, y, width, height FROM terrain WHERE encounter_id == '{eid}' "
+    )
+    return await cur.fetchall()
